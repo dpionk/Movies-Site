@@ -5,9 +5,6 @@ import axios from 'axios';
 function ProductForm({ pobierz, products }) {
 
 	const history = useHistory();
-	function handleClick() {
-		history.go(-1);
-	}
 
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
@@ -40,7 +37,7 @@ function ProductForm({ pobierz, products }) {
 			pobierz();
 			alert("Dodano!");
 			if (response.status === 200) {
-				
+
 			}
 			history.push('/');
 		})
