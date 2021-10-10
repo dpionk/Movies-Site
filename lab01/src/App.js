@@ -37,7 +37,7 @@ useEffect(() => {
     <div className="App">
 		<BrowserRouter>
 		<Route exact path = '/products/new'>
-		<ProductForm pobierz={pobierz}/>
+		<ProductForm pobierz={pobierz} products={ProductsList}/>
 			</Route>
 	  <Route exact patch = {[ '/', '/products']}>
       {/*{ProductsList}*/}
