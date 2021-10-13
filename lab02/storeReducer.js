@@ -44,8 +44,6 @@ function storeReducer(state = { todos: [], notes: [] }, action) {
     }
 }
 
-
-
 // let store = Redux.createStore(storeReducer);
 // store.dispatch({ type: 'ADD_TODO', payload: { id: 0, title: 'test', done: false } });
 // store.dispatch({ type: 'ADD_TODO', payload: { id: 1, title: 'test1', done: false } });
