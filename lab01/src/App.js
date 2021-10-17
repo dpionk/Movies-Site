@@ -30,9 +30,10 @@ useEffect(() => {
 		<BrowserRouter>
 		<Switch>
 		<Route exact path = '/products/new' component={ProductForm}  pobierz={pobierz} products={products}/>
-	  <Route exact patch = {['/', '/products']} component='ProductList' products={products}>
+	  <Route exact patch = '/products'>
+		  <ProductList products={products}/>
 	  </Route>
-	  <Route exact path = '/products/:id/details' component='ProductDetails'>
+	  <Route exact path = '/products/:id/details' component={ProductDetails}>
 	  </Route>
 	  <Route exact path = '/products/:id/edit'>
 	  </Route>

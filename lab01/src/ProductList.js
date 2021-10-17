@@ -1,11 +1,9 @@
+import ProductInList from './ProductInList'
+
 function ProductList({products}) {
 	 
 	const ProductsList = products.map((product) => {
-		const productInList = <ul><li>
-		  {product.id}<li>{product.title} </li><li>{product.price} </li><li>{product.category} </li>
-		</li>
-		</ul>
-	  
+		const productInList =  <ul key={product.id}><ProductInList id={product.id} title={product.title} price={product.price} category={product.category}></ProductInList></ul>
 		return productInList
 	  })
 	  
