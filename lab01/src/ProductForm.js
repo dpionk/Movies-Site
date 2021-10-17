@@ -2,6 +2,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import axios from 'axios';
+const yup = require('yup');
 function ProductForm({ pobierz, products }) {
 
 	const history = useHistory();
@@ -44,27 +45,28 @@ function ProductForm({ pobierz, products }) {
 
 	}
 
-	const handleValidate = (values) => {
-		const errors = {};
+	//const handleValidate = (values) => {
+	//	const errors = {};
 
-		if (!values.title) {
-			errors.title = "Tytuł nie może być pusty"
-		}
-		if (!values.price) {
-			errors.price = "Cena nie może być pusta"
-		}
-		if (!values.description) {
-			errors.description = "Opis nie może być pusty"
-		}
-		if (!values.category) {
-			errors.release_date = "Obrazek wymagany"
-		}
-		if (!values.image) {
-			errors.description = "Opis nie może być pusty"
-		} 
-		return errors;
-	}
+	//	if (!values.title) {
+	//		errors.title = "Tytuł nie może być pusty"
+	//	}
+	//	if (!values.price) {
+	//		errors.price = "Cena nie może być pusta"
+	//	}
+	//	if (!values.description) {
+	//		errors.description = "Opis nie może być pusty"
+	//	}
+	//	if (!values.category) {
+	//		errors.release_date = "Obrazek wymagany"
+	//	}
+	//	if (!values.image) {
+	//		errors.description = "Opis nie może być pusty"
+	//	} 
+	//	return errors;
+	//}
 
+	
 	useEffect(() => {
 		if (id.id !== undefined) {
 			setAdding(false);
@@ -84,6 +86,18 @@ function ProductForm({ pobierz, products }) {
 		}
 	}, [id])
 
+	const yupObject = yup.object().shape({
+		title: yup.string()
+		.required("Tytuł jest obowiązkowy"),
+		price: yup.number()
+		.required("Cena jest obowiązkowa")
+		.min(0, "Cena musi być większa od 0"),
+		description: yup.string(),
+		category: yup.string(),
+		image: yup.string().url("Nieprawidłowy URL")
+
+
+	})
 	return (
 		<Formik
 			enableReinitialize
@@ -105,7 +119,7 @@ function ProductForm({ pobierz, products }) {
 						image: ''
 					}
 			}
-			validate={handleValidate}
+			validationSchema={yupObject}
 			onSubmit={editing ? handleSubmitEdit : handleSubmitAdd}>
 
 			{ (formProps) => (
