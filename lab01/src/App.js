@@ -29,13 +29,19 @@ useEffect(() => {
     <div className="App">
 		<BrowserRouter>
 		<Switch>
-		<Route exact path = '/products/new' component={ProductForm}  pobierz={pobierz} products={products}/>
-	  <Route exact patch = '/products'>
+		<Route exact path = {['/products/new', '/products/:id/edit']}>
+		<ProductForm pobierz={pobierz}></ProductForm>
+		</Route>
+	  <Route exact patch = {['/products', '/']}>
 		  <ProductList products={products}/>
 	  </Route>
-	  <Route exact path = '/products/:id/details' component={ProductDetails}>
+	  <Route exact path = '/products/:id/details'>
+		  <ProductDetails/>
 	  </Route>
-	  <Route exact path = '/products/:id/edit'>
+	  <Route exact path = '*'>
+		  <div>
+			  Nie ma takiej strony
+		  </div>
 	  </Route>
 	  </Switch>
 		</BrowserRouter>
