@@ -1,27 +1,48 @@
 import { useParams } from "react-router-dom"
 import axios from 'axios';
 import { useState, useEffect } from "react";
+import {Link} from 'react-router-dom'
+import Item from "./Item";
+import { ConfirmProvider } from 'material-ui-confirm';
 
 function ProductDetails() {
 	
 	const { id } = useParams();
-	console.log(id)
 	const [product, setProduct] = useState();
-
 	useEffect(() => {
 		axios.get(`https://fakestoreapi.com/products/${id}`).then((response) => {
-			console.log(response.data)
-			setProduct(response.data[id - 1])
+			setProduct(response.data)
 		}).catch((error) => {
 			console.log(error)
 		})
 	}, [id]
 	);
-	
+
 
 	return (
 		<div>
-			{product.title}
+			{product &&
+			<div>
+			<div>
+				<img src ={product.image} alt="new"/>
+			</div>
+			<div>
+				{product.title}
+			</div>
+			<div>
+				{product.price}
+			</div>
+			<div>
+				{product.description}
+			</div>
+			<div>
+				{product.category}
+				</div>
+				<div>
+				<Item></Item>
+				<Link to={`/products/${id}/edit`}><button>Edytuj</button></Link>
+				</div>
+			</div>	}
 		</div>
 	)
 }

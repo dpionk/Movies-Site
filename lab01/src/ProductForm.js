@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import axios from 'axios';
 const yup = require('yup');
-function ProductForm({ pobierz, products }) {
+function ProductForm({ pobierz}) {
 
 	const history = useHistory();
 
@@ -12,14 +12,13 @@ function ProductForm({ pobierz, products }) {
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
 	const [loading, setLoading] = useState(false);
-	const [bookError, setBookError] = useState(false);
 	const [data, setData] = useState();
 
 	const id = useParams();
 
 	const handleSubmitEdit = (values) => {
 		setPending(true);
-		axios.put(`http://localhost:5000/api/book/${id.id}`, values).then(() => {
+		axios.put(`https://fakestoreapi.com/products/${id.id}`, values).then(() => {
 			setPending(false);
 			pobierz();
 			alert("Edycja przebiegła pomyślnie");
@@ -71,12 +70,11 @@ function ProductForm({ pobierz, products }) {
 		if (id.id !== undefined) {
 			setAdding(false);
 			setEditing(true);
-			axios.get(`http://localhost:5000/api/book/${id.id}`).then((response) => {
+			axios.get(`https://fakestoreapi.com/products/${id.id}`).then((response) => {
 				setLoading(true);
 				setData(response.data)
-			}).catch(() => {
-				setBookError(true);
-			}).finally(() => {
+			})
+			.finally(() => {
 				setLoading(false);
 			})
 		}
@@ -94,7 +92,7 @@ function ProductForm({ pobierz, products }) {
 		.min(0, "Cena musi być większa od 0"),
 		description: yup.string(),
 		category: yup.string(),
-		image: yup.string().url("Nieprawidłowy URL")
+		image: yup.string().url("Nieprawidłowy URL").notRequired()
 
 
 	})
@@ -125,7 +123,6 @@ function ProductForm({ pobierz, products }) {
 			{ (formProps) => (
 				<div >
 					<div>
-						{bookError && <div> Nie udało się załadować danych książki</div>}
 						{loading && <div>Ładowanie...</div>}
 						<div>
 							<form>
@@ -136,26 +133,26 @@ function ProductForm({ pobierz, products }) {
 									</Field>
 									{formProps.touched.title && formProps.errors.title ? <div className="error">{formProps.errors.title}</div> : null}
 								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Cena</label>
+								<div>
+									<label>Cena</label>
 									<Field type='text' name='price' value={formProps.values.price ? formProps.values.price : ''}>
 									</Field>
 									{formProps.touched.price && formProps.errors.price ? <div className="error">{formProps.errors.price}</div> : null}
 								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Kategoria</label>
+								<div >
+									<label >Kategoria</label>
 									<Field type='text' name='category' value={formProps.values.category ? formProps.values.category : ''}>
 									</Field>
 									{formProps.touched.category && formProps.errors.category ? <div className="error">{formProps.errors.category}</div> : null}
 								</div>
-								<div className='mb-2'>
+								<div >
 									<label className='form-label'>Opis</label>
 									<Field component='textarea' name='description' value={formProps.values.description ? formProps.values.description : ''}>
 									</Field>
 									{formProps.touched.description && formProps.errors.description ? <div className="error">{formProps.errors.description}</div> : null}
 								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Link do obrazka</label>
+								<div>
+									<label >Link do obrazka</label>
 									<Field type='text' name='image' value={formProps.values.image ? formProps.values.image : ''}>
 									</Field>
 									{formProps.touched.image && formProps.errors.image ? <div className="error">{formProps.errors.image}</div> : null}

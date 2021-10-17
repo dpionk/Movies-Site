@@ -32,7 +32,7 @@ useEffect(() => {
 		<Route exact path = {['/products/new', '/products/:id/edit']}>
 		<ProductForm pobierz={pobierz}></ProductForm>
 		</Route>
-	  <Route exact patch = {['/products', '/']}>
+	  <Route exact path = {['/products', '/']}>
 		  <ProductList products={products}/>
 	  </Route>
 	  <Route exact path = '/products/:id/details'>
