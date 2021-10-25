@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 
 const TodoForm = (props) => {
 
-    useEffect(() => {
-        console.log(props.todos);
-    }, [props])
+    //useEffect(() => {
+    //    console.log(props.todos);
+    //}, [props])
 
     const handleSubmit = (values) => {
         props.addTodoAction(values);
