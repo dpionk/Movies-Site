@@ -33,13 +33,13 @@ function App() {
 					<Route exact path='/todos'>
 						<ToDoList />
 					</Route>
-					<Route exact path='/todos/add'>
+					<Route exact path={['/todos/add', '/todos/:id/edit']}>
 						<TodoForm />
 					</Route>
 					<Route exact path='/todos/:id'>
 						<ToDo />
 					</Route>
-					<Route exact path='/notes/add'>
+					<Route exact path={['/notes/add', '/notes/:id/edit']}>
 						<NoteForm />
 					</Route>
 					<Route exact path='/notes'>

@@ -8,6 +8,7 @@ export const NoteReducer = (state = [], action) => {
 			return [...state.map((element) => {
 				if (element.id === action.payload.id) {
 					const nowyElement = element
+					console.log(action.payload.text)
 					nowyElement.text = action.payload.text
 					return nowyElement
 				}

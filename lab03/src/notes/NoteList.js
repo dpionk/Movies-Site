@@ -6,7 +6,7 @@ const NoteList = ( {notes, deleteNoteAction},  props ) => {
 
     return (
         <div>
-            {notes.map(note => (<div><div><Link to={`/notes/${note.id}`}> {note.id}  </Link> {note.name}    {note.date}    <button onClick={() => deleteNoteAction(note)}>delete</button><button>Edit</button></div></div>))}
+            {notes.map(note => (<div><div><Link to={`/notes/${note.id}`}> {note.id}  </Link> {note.text} <button onClick={() => deleteNoteAction(note)}>delete</button><Link to={`/notes/${note.id}/edit`}>Edit</Link></div></div>))}
         </div>
     )
 };
