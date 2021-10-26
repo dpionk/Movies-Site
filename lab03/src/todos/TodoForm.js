@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik"
 import {v4 as uuidv4 } from 'uuid';
 import { addTodoAction } from "../actions/TodoActions";
-import { useEffect } from "react";
+//import { useEffect } from "react";
 import { connect } from 'react-redux';
 
 const TodoForm = (props) => {
@@ -45,7 +45,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-    addTodoAction
+    addTodoAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoForm);
