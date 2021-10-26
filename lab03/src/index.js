@@ -6,11 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import { combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { TodoReducer } from './reducers/TodoReducer'
+import { NoteReducer } from './reducers/NoteReducer'
 
 let store = createStore(
   combineReducers(
     { 
-      todos: TodoReducer
+      todos: TodoReducer,
+	  notes: NoteReducer
     }
   ));
 

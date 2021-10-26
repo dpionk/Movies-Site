@@ -1,7 +1,6 @@
 import { TODO_ADD, TODO_EDIT, TODO_DONE, TODO_DELETE } from "../actions/TodoActions";
 
 export const TodoReducer = (state = [], action) => {
-    console.log(action);
     switch(action.type) {
         case TODO_ADD: 
             return [...state, action.payload];
