@@ -12,6 +12,12 @@ function Navbar() {
       <div>
         <Link to="/movies/add">Dodaj film</Link>
       </div>
+      <div>
+      <div>
+        <Link to="/directors">Lista reżyserów</Link>
+      </div>
+        <Link to="/directors/add">Dodaj reżysera</Link>
+      </div>
     </div>
   );
 }

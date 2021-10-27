@@ -13,8 +13,8 @@ export const MoviesReducer = (state = [{"id": "74e936df-c4cb-4d7e-a0d7-4113bd921
 			return [...state.map((element) => {
 				if (element.id === action.payload.id) {
 					const nowyElement = element
-					nowyElement.name = action.payload.name
-                    nowyElement.date = action.payload.date
+					nowyElement.title = action.payload.title
+                    nowyElement.productionYear = action.payload.productionYear
 					return nowyElement
 				}
 				return element
