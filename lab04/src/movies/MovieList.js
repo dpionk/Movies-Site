@@ -6,7 +6,7 @@ const MovieList = ( {movies, deleteMovieAction},  props ) => {
 
     return (
         <div>
-            {movies.map(movie => (<div><div><Link to={`/movies/${movie.id}`}> {movie.id}  </Link> {movie.title}   {movie.productionYear} <button onClick={() => deleteMovieAction(movie)}>Usuń</button></div></div>))}
+            {movies.map(movie => (<div><div><Link to={`/movies/${movie.id}`}> {movie.title}  </Link> {movie.productionYear} <button onClick={() => deleteMovieAction(movie)}>Usuń</button></div></div>))}
         </div>
     )
 };

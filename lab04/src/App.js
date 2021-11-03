@@ -7,6 +7,7 @@ import MovieList from './movies/MovieList';
 import Navbar from './Navbar';
 import Movie from './movies/Movie';
 import DirectorList from './directors/DirectorList';
+import Director from './directors/Director';
 
 function App() {
   return (
@@ -23,15 +24,19 @@ function App() {
         <Route exact path='/movies/add'>
             <MovieForm/>
         </Route>
-        <Route exact path='movies/:id'>
+        <Route exact path='/movies/:id'>
           <Movie/>
         </Route>
         <Route exact path='/directors'>
           <DirectorList/>
         </Route>
-        <Route exact path='/directors/add'>
+        <Route exact path={['/directors/add', '/directors/:id/edit']}>
             <DirectorForm/>
         </Route>
+        <Route exact path='/directors/:id'>
+          <Director/>
+        </Route>
+
       </Switch>
       </BrowserRouter>
     </div>

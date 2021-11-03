@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { addDirectorAction, editDirectorAction } from "../actions/DirectorsActions";
 import { connect } from 'react-redux';
 
-const DirectorForm = ( props) => {
+const DirectorForm = ( {directors}, props ) => {
 
 
 	const handleSubmit = (values) => {
         console.log(values);
 		props.addDirectorAction(values);
 	}
-
+	
 	return (
 
 		<div>
@@ -41,7 +41,8 @@ const DirectorForm = ( props) => {
 
 const mapStateToProps = (state) => {
 	return {
-		movies: state.movies
+		directors: state.directors
+		
 	}
 };
 

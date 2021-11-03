@@ -6,7 +6,7 @@ const DirectorList = ( {directors, deleteDirectorAction},  props ) => {
 
     return (
         <div>
-            {directors.map(director => (<div><div><Link to={`/directors/${director.id}`}> {director.id}  </Link> {director.title}   {director.productionYear} <button onClick={() => deleteDirectorAction(director)}>Usuń</button></div></div>))}
+            {directors.map(director => (<div><div><Link to={`/directors/${director.id}`}> {director.firstName} {director.lastName}  </Link>  <button onClick={() => deleteDirectorAction(director)}>Usuń</button></div></div>))}
         </div>
     )
 };
