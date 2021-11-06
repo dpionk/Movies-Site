@@ -1,11 +1,17 @@
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { withRouter } from "react-router";
 
 
-const Movie = ({movie, director}, props) => {
+const Movie = ({movie}) => {
+
+	const director = useSelector((state) => {
+		return state.directors.find(element => 
+			element.id === movie.director_id )
+	})
+	
 	return (
 		<div>
-			{movie.title}   {movie.productionYear}
+			{movie.title}   {movie.productionYear} {director ? <div>{director.firstName} {director.lastName}</div> : null }
 		</div>
 	)
 }

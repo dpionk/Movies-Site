@@ -3,12 +3,12 @@ import { withRouter } from "react-router";
 import { Link } from 'react-router-dom';
 
 
-const Director = ({director}, props) => {
+const Director = ({director}) => {
 	return (
 		<div>
             
 			{director.firstName}   {director.lastName} {director.age}
-            <Link to={`/directors/${director.id}/edit`}>Edytuj</Link>
+            <Link to={`/directors/edit/${director.id}`}>Edytuj</Link>
 		</div>
 	)
 }

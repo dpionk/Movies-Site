@@ -4,6 +4,7 @@ import Dashboard from './movies/Dashboard';
 import DirectorForm from './directors/DirectorForm'
 import MovieForm from './movies/MovieForm';
 import MovieList from './movies/MovieList';
+import ActorList from './actors/ActorList';
 import Navbar from './Navbar';
 import Movie from './movies/Movie';
 import DirectorList from './directors/DirectorList';
@@ -30,13 +31,15 @@ function App() {
         <Route exact path='/directors'>
           <DirectorList/>
         </Route>
-        <Route exact path={['/directors/add', '/directors/:id/edit']}>
+        <Route exact path={['/directors/edit/:id', '/directors/add' ]}>
             <DirectorForm/>
         </Route>
         <Route exact path='/directors/:id'>
           <Director/>
         </Route>
-
+		<Route exact path='/actors'>
+          <ActorList/>
+        </Route>
       </Switch>
       </BrowserRouter>
     </div>
