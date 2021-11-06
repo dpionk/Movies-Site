@@ -3,15 +3,10 @@ import { deleteDirectorAction } from "../actions/DirectorsActions";
 import { deleteMovieAction } from "../actions/MoviesActions";
 import { Link } from 'react-router-dom';
 
-const DirectorList = ( {directors,deleteDirectorAction, movies, deleteMovieAction}, props ) => {
+const DirectorList = ( {directors,deleteDirectorAction}, props ) => {
 
 	const handleDelete = (director) => {
 		deleteDirectorAction(director)
-		movies.forEach(element => {
-			if (element.director_id === director.id) {
-			deleteMovieAction(element)
-			}
-		});
 	}
 
     return (
