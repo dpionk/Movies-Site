@@ -7,12 +7,14 @@ import { Provider } from 'react-redux';
 import { combineReducers, createStore } from 'redux';
 import { MoviesReducer } from './reducers/MoviesReducer'
 import { DirectorsReducer } from './reducers/DirectorsReducer';
+import { ActorsReducer } from './reducers/ActorsReducer';
 
 const store = createStore(
   combineReducers(
     {
       movies: MoviesReducer,
-      directors: DirectorsReducer
+      directors: DirectorsReducer,
+	  actors: ActorsReducer
     }
   )
 );

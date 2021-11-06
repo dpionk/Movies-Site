@@ -7,7 +7,7 @@ const Actor = ({actor}) => {
 	return (
 		<div>
             
-			{actor.firstName}   {actor.lastName} {actor.age}
+			{actor.firstName}   {actor.lastName} {actor.age} <Link to={`/actors/edit/${actor.id}`}>Edytuj</Link>
 		</div>
 	)
 }

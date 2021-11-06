@@ -1,4 +1,4 @@
-import { ACTOR_ADD, ACTOR_EDIT, ACTOR_DELETE } from "../actions/ACTORsActions";
+import { ACTOR_ADD, ACTOR_EDIT, ACTOR_DELETE } from "../actions/ActorsActions";
 
 
 export const ActorsReducer = (state = [], action) => {
@@ -11,6 +11,7 @@ export const ActorsReducer = (state = [], action) => {
 					const nowyElement = element
 					nowyElement.firstName = action.payload.firstName
                     nowyElement.lastName = action.payload.lastName
+					nowyElement.age = action.payload.age
 					return nowyElement
 				}
 				return element
