@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import logger from './Logger'
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { MoviesReducer } from './reducers/MoviesReducer'
 import { DirectorsReducer } from './reducers/DirectorsReducer';
 import { ActorsReducer } from './reducers/ActorsReducer';
@@ -18,7 +19,7 @@ const store = createStore(
 	  actors: ActorsReducer,
 	  actorsInMovies: ActorsInMoviesReducer
     }
-  )
+  ), applyMiddleware(logger)
 );
 ReactDOM.render(
   <React.StrictMode >
