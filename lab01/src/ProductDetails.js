@@ -39,7 +39,9 @@ function ProductDetails() {
 				{product.category}
 				</div>
 				<div>
-				<Item></Item>
+					<ConfirmProvider>
+				<Item/>
+				</ConfirmProvider>
 				<Link to={`/products/${id}/edit`}><button>Edytuj</button></Link>
 				</div>
 			</div>	}

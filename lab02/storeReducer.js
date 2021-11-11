@@ -44,15 +44,15 @@ function storeReducer(state = { todos: [], notes: [] }, action) {
     }
 }
 
-// let store = Redux.createStore(storeReducer);
-// store.dispatch({ type: 'ADD_TODO', payload: { id: 0, title: 'test', done: false } });
-// store.dispatch({ type: 'ADD_TODO', payload: { id: 1, title: 'test1', done: false } });
-// store.dispatch({ type: 'ADD_TODO', payload: { id: 2, title: 'test2', done: false } });
+ let store = Redux.createStore(storeReducer);
+ store.dispatch({ type: 'ADD_TODO', payload: { id: 0, title: 'test', done: false } });
+ store.dispatch({ type: 'ADD_TODO', payload: { id: 1, title: 'test1', done: false } });
+ store.dispatch({ type: 'ADD_TODO', payload: { id: 2, title: 'test2', done: false } });
 
 // store.dispatch({ type: 'UPDATE_TODO', payload: { id: 0, title: 'test2fdgfdgfdg', done: false } });
 // store.dispatch({ type: 'FINISH_TODO', payload: { id: 2, title: 'test2fdgfdgfdg', done: false } });
-// store.dispatch({ type: 'DELETE_TODO', payload: { id: 2, title: 'test2fdgfdgfdg', done: false } });
-// store.dispatch({ type: 'ADD_NOTE', payload: { id: 1, content: 'asdfesfgdrg'} });
-// store.dispatch({ type: 'ADD_NOTE', payload: { id: 2, content: 'asdfesfgfdgfddrg'} });
-// // store.dispatch({ type: 'DELETE_NOTE', payload: { id: 2, content: 'asdfesfgfdgfddrg'} });
-// console.log(store.getState())
+ store.dispatch({ type: 'DELETE_TODO', payload: { id: 2 } });
+ store.dispatch({ type: 'ADD_NOTE', payload: { id: 1, content: 'asdfesfgdrg'} });
+ store.dispatch({ type: 'ADD_NOTE', payload: { id: 2, content: 'asdfesfgfdgfddrg'} });
+  store.dispatch({ type: 'DELETE_NOTE', payload: { id: 2 } });
+ console.log(store.getState())

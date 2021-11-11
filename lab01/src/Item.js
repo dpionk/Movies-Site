@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@mui-material/Button';
+import Button from '@material-mui/Button';
 import { useConfirm } from 'material-ui-confirm';
 import axios from 'axios';
 import { useParams } from 'react-router';
