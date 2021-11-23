@@ -1,0 +1,11 @@
+const PRODUCT_LIST = 'PRODUCT_LIST';
+const PRODUCT_CREATE = 'PRODUCT_CREATE'
+const PRODUCT_DETAILS = 'PRODUCT_DETAILS'
+
+const types = {
+    PRODUCT_LIST,
+    PRODUCT_DETAILS,
+    PRODUCT_CREATE
+};
+
+export default types;

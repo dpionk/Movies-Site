@@ -1,12 +1,12 @@
 import types from "./types";
 
-export const userReducer = (state = [], action) => {
+export const productReducer = (state = [], action) => {
     switch(action.type) {
-        case types.USER_LIST: 
+        case types.PRODUCT_LIST: 
             return [...action.payload]
-		case types.USER_DETAILS:
+		case types.PRODUCT_DETAILS:
 			return action.payload
-        case types.USER_CREATE:
+        case types.PRODUCT_CREATE:
             return [...state, action.payload]; 
         default:
             return state;

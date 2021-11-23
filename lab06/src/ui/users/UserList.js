@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { getUserList } from "../../ducks/users/operations";
@@ -16,7 +16,9 @@ const UserList = ({ users, getUserList } ,props) => {
                 users.map(user => {
                     return (
                     <div>
+						<Link to={`/users/${user.id}`}>
                         {user.name}
+						</Link>
                     </div>)
                     })
             }

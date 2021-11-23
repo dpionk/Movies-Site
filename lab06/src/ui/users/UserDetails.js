@@ -7,22 +7,24 @@ import { getUserDetails } from "../../ducks/users/selectors";
 const UserDetails = ({user, getUser}, props) => {
     const id = useParams().id;
 
-    console.log(props)
     useEffect(() => {
         getUser(id);
     }, [id]);
 
-    console.log(user)
+    console.log(props)
     return (
         <div>
-            {/* <h3>{user.username}</h3> */}
+            <h3>{user.username}</h3>
+			<div>{user.name}</div>
+			<div>{user.email}</div>
+			<div>{user.phone}</div>
         </div>
     )
 }
 
 const mapStateToProps = (state, props) => {
     return {
-        user: getUserDetails(state, props.match),
+        user: getUserDetails(state, props),
     };
 }
 const mapDispatchToProps = {
