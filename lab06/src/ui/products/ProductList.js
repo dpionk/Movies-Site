@@ -9,8 +9,6 @@ const ProductList = ({ products, getProductList, deleteProduct } ,props) => {
         getProductList();
     }, []);
 
-
-	console.log(products)
     return (
         <div>
             <h3>Products list</h3>
