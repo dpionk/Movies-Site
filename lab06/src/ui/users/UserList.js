@@ -13,7 +13,7 @@ const UserList = ({ users, getUserList } ,props) => {
         <div>
             <h3>Users list</h3>
             {
-                users.map(user => {
+                users && users.map(user => {
                     return (
                     <div>
 						<Link to={`/users/${user.id}`}>

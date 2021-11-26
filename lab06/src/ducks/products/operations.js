@@ -29,3 +29,16 @@ export const createProduct = (newProduct) => {
         }
     }
 }
+
+export const deleteProduct = (productToDelete) => {
+	return async dispatch => {
+		try {
+			const response = await
+			axios.delete(`https://fakestoreapi.com/products/${productToDelete.id}`);
+			if(response.status === 200)
+			dispatch(actions.productDeleteAction(response.data));
+		}
+		catch (ex) {
+		}
+	}
+}

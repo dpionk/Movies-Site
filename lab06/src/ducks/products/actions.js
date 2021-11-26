@@ -14,3 +14,8 @@ export const productCreateAction = (newProduct) => ({
     type: types.PRODUCT_CREATE,
     payload: newProduct
 });
+
+export const productDeleteAction = (product) => ({
+	type: types.PRODUCT_DELETE,
+	payload: product
+})

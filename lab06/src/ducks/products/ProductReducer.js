@@ -8,6 +8,8 @@ export const productReducer = (state = [], action) => {
 			return action.payload
         case types.PRODUCT_CREATE:
             return [...state, action.payload]; 
+		case types.PRODUCT_DELETE:
+			return state.filter(el => el.id !== action.payload.id)
         default:
             return state;
     }

@@ -21,11 +21,11 @@ function App() {
 		<Route exact path = '/products'>
 			<ProductList/>
 		</Route>
-		<Route exact path = '/products/:id'>
-			<ProductDetails/>
-		</Route>
 		<Route exact path = '/products/add'>
 			<ProductForm/>
+		</Route>
+		<Route exact path = '/products/:id'>
+			<ProductDetails/>
 		</Route>
 		<Route exact path = '/'>
           <Dashboard/>
