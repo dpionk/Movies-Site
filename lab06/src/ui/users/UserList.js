@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { getUserList } from "../../ducks/users/operations";
-import { getUsers } from "../../ducks/users/selectors";
+import { getAllUsers } from "../../ducks/users/selectors";
 
-const UserList = ({ users, getUserList } ,props) => {
+const UserList = ({ users, getUserList, getAllUsers } ,props) => {
     useEffect(() => {
         getUserList();
     }, []);
@@ -27,7 +27,7 @@ const UserList = ({ users, getUserList } ,props) => {
 };
 const mapStateToProps = (state) => {
     return {
-        users: getUsers(state)
+        users: getAllUsers(state)
     };
 }
 const mapDispatchToProps = {
