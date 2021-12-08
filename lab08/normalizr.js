@@ -65,4 +65,52 @@ const apiData = [
 
 const normalizedData = normalize(apiData, bookListSchema)
 
-console.log(normalizedData.entities.books)
+//console.log(normalizedData.entities.books)
+
+const allEntities = [
+	"authors",
+	"books"
+]
+
+const defaultState = allEntities.reduce(
+    (acc, currentEntity) => ({
+        ...acc,
+        [currentEntity]: {
+            byId: {},
+            allIds: []
+        }
+    }), {}
+);
+
+const entityReducer = (entity, state = { allIds: [], byId: {} }, action) => {
+    const actionEntities = action.payload.entities[entity];
+    switch(action.type) {
+        case 'GET_ALL':
+            return {
+                byId: {
+                    ...Object.keys(actionEntities).reduce(
+                        (acc, id) => ({
+                            ...acc,
+                            [id]: {
+                                ...state.byId[id],
+                                ...actionEntities[id]
+                            }
+                        })
+                    , {}),
+                },
+                allIds: Object.keys(actionEntities)
+            }
+        default:
+            console.log('Error action not recognized');
+    }
+}
+
+const test = entityReducer(
+    'books', 
+{ allIds: [], byId: {} }, 
+{
+    type: 'GET_ALL',
+    payload: normalizedData
+})
+
+console.log(test)
