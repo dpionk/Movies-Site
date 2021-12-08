@@ -65,7 +65,7 @@ const apiData = [
 
 const normalizedData = normalize(apiData, bookListSchema)
 
-//console.log(normalizedData.entities.books)
+//console.log(normalizedData)
 
 const allEntities = [
 	"authors",
@@ -100,6 +100,37 @@ const entityReducer = (entity, state = { allIds: [], byId: {} }, action) => {
                 },
                 allIds: Object.keys(actionEntities)
             }
+		case 'ADD':
+			if (entity == 'books') {
+			const to_add = action.to_add
+			return {
+				...action.payload,
+				entities : {
+					...action.payload.entities,
+					[entity]: {
+						...actionEntities,
+						[to_add['id']]: to_add
+					}
+					
+				},
+				result: [...action.payload.result, to_add.id]
+
+			}
+		}
+		else {
+			const to_add = action.to_add
+			return {
+				...action.payload,
+				entities : {
+					...action.payload.entities,
+					[entity]: {
+						...actionEntities,
+						[to_add['id']]: to_add
+					}
+				}
+
+			}
+		}
         default:
             console.log('Error action not recognized');
     }
@@ -113,4 +144,48 @@ const test = entityReducer(
     payload: normalizedData
 })
 
-console.log(test)
+//console.log(test)
+
+const test2 = entityReducer(
+	'authors',
+	{ allIds: [], byId: {} },
+	{
+		type: 'GET_ALL',
+		payload: normalizedData
+	}
+)
+
+//console.log(test2)
+
+const test_add = entityReducer(
+	'books',
+	{ allIds: [], byId: {} },
+	{
+		type:'ADD',
+		payload: normalizedData,
+ 		to_add: {
+			 'id': 'aaa',
+			 'title' : 'Książka 4',
+			 'pages': 34543,
+			 'authors': []
+		 }
+	}
+)
+
+const test_add_2 = entityReducer(
+	'authors',
+	{ allIds: [], byId: {} },
+	{
+		type:'ADD',
+		payload: normalizedData,
+ 		to_add: {
+			id: 'az4',
+			firstName: 'Alberdfgdfgt',
+			lastName: 'Kowalsksdfsdfi'
+		 }
+	}
+)
+
+//console.log(test_add.entities.books)
+//console.log("=====================")
+//console.log(test_add_2.entities.authors)
