@@ -1,0 +1,51 @@
+@import "~bootstrap/scss/bootstrap";
+
+.container-add {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+  .button-back {
+    align-self: flex-end;
+    button {
+      background-color: $blue-300;
+      border: none;
+    }
+  }
+
+  .form {
+    button {
+      background-color: $blue-300;
+      color: white;
+
+      &:hover {
+        color: white;
+      }
+    }
+    .add-movie {
+      border: 2px solid $gray-300;
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      border-radius: 20px;
+        .mb-2 {
+          .error {
+            color: $red-500;
+          }
+		}
+        button {
+          border-radius: 20px;
+          width: 100%;
+        }
+        h2 {
+          margin: 20px;
+        }
+
+        div {
+          padding: 10px;
+        }
+      }
+    }
+  }

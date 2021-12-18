@@ -1,0 +1,18 @@
+@media (max-width: 768px) {
+	.list-group {
+	  &.filter {
+		align-items: center;
+		.form-check {
+		  display: flex;
+		  flex-direction: column;
+  
+		  .star-filter {
+			display: flex;
+			flex-direction: row-reverse;
+			gap: 10px;
+		  }
+		}
+	  }
+	}
+  }
+  

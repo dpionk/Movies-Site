@@ -1,0 +1,145 @@
+@import "~bootstrap/scss/bootstrap";
+
+.movie-detailed {
+  .list-group-detailed {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 20px;
+    .list-group-item {
+      display: flex;
+      gap: 30px;
+      padding: 20px;
+
+      .img-date {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        img {
+          height: 350px;
+          width: 300px;
+        }
+        .release-date {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          align-items: center;
+        }
+      }
+
+      .info-buttons {
+        display: flex;
+        flex-direction: column;
+
+        .buttons {
+          display: flex;
+          flex-direction: row-reverse;
+          gap: 20px;
+          button {
+            background-color: $blue-300;
+            color: white;
+
+            &:hover {
+              color: white;
+            }
+          }
+        }
+        .title-author {
+          display: flex;
+          flex-direction: column;
+          .title-back {
+            display: flex;
+            justify-content: space-between;
+            .title {
+              justify-content: justify;
+              font-weight: bold;
+              font-size: 2.5em;
+            }
+            .button-back {
+              button {
+                background-color: $blue-300;
+                color: white;
+              }
+            }
+          }
+
+          .author {
+            font-style: italic;
+            color: $gray-700;
+          }
+
+          .description {
+            color: $gray-700;
+            margin-top: 20px;
+            justify-content: justify;
+          }
+
+          .release-date {
+            margin-top: 20%;
+          }
+        }
+      }
+    }
+  }
+}
+@media (min-width: 768px) {
+  .movie-detailed {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .list-group-detailed {
+      justify-content: center;
+      .info-buttons {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .title-author {
+        justify-content: justify;
+      }
+    }
+  }
+}
+@media (max-width: 767px) {
+  .movie-detailed {
+    .list-group-detailed {
+      .list-group-item {
+        border-radius: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+
+        .img-date {
+          gap: 5px;
+          img {
+            height: 300px;
+            width: 200px;
+          }
+        }
+        .info-buttons {
+          align-items: center;
+          gap: 20px;
+
+          .title-author {
+            align-items: center;
+            text-align: center;
+            max-width: 100%;
+
+            .title-back {
+              flex-direction: column-reverse;
+              .title {
+                font-size: 2em;
+                max-width: 100%;
+              }
+            }
+
+            .author {
+              font-style: italic;
+              color: grey;
+            }
+          }
+        }
+      }
+    }
+  }
+}
