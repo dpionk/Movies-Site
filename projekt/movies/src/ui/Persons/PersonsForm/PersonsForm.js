@@ -31,7 +31,7 @@ function PersonsForm({createPerson}) {
 			errors.first_name = "Imię nie może być puste"
 		}
 		if (!values.last_name) {
-			errors.last_name = "Name nie może być puste"
+			errors.last_name = "Nazwisko nie może być puste"
 		}
 		if (!values.birth_date) {
 			errors.birth_date = "Data jest wymagana"

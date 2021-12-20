@@ -70,7 +70,7 @@ function MovieDetails ({movie}) {
 								</div>
 								<div className="buttons">
 									{!deleting && !error && <button type='submit' className='btn'><AiFillDelete/></button>}
-									<Link to={`/edit/${movie.id}`}>
+									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
 									{deleting && !error && <button className='btn' disabled>Usuwanie...</button>}

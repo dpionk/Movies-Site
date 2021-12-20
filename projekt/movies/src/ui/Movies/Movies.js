@@ -1,17 +1,12 @@
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getMovies } from '../../ducks/Movies/selectors'
-import { getMovieList } from '../../ducks/Movies/operations';
 import Movie from './Movie'
 import { AiFillFilter } from 'react-icons/ai';
 import { BiSort } from 'react-icons/bi';
 import './Movies.scss';
 
-function Movies({movies, getMovieList}) {
+function Movies({movies}) {
 
-	useEffect(() => {
-        getMovieList();
-    }, []);
 
 	const movieList = movies.map((movie) => {
 		const movieInList = <Movie 
@@ -52,8 +47,5 @@ const mapStateToProps = (state) => {
 	};
 }
 
-const mapDispatchToProps = {
-	getMovieList
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Movies);
+export default connect(mapStateToProps,null)(Movies);

@@ -1,4 +1,8 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import { getMovieList } from '../../ducks/Movies/operations';
+import { getPersonList } from '../../ducks/Persons/operations';
+import { connect } from 'react-redux';
+import { useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import Movies from '../Movies/Movies';
 import MovieDetails from '../Movies/MovieDetails'
@@ -10,7 +14,13 @@ import PageNotFound from '../PageNotFound/PageNotFound'
 import './App.scss'
 
 
-function App() {
+function App({getMovieList, getPersonList}) {
+	
+	useEffect(() => {
+        getMovieList();
+		getPersonList();
+    }, []);
+
   return (
 	  <BrowserRouter>
     <div>
@@ -31,4 +41,9 @@ function App() {
   );
 }
 
-export default App;
+const mapDispatchToProps = {
+	getMovieList,
+	getPersonList
+}
+
+export default connect(null, mapDispatchToProps)(App);
