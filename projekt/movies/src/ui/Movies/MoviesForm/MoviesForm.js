@@ -1,28 +1,39 @@
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import { connect } from 'react-redux';
-import { createMovie } from '../../../ducks/Movies/operations';
+import { getMovieDetails } from "../../../ducks/Movies/selectors";
+import { createMovie, editMovie } from '../../../ducks/Movies/operations';
 import './MoviesForm.scss'
 
-function MoviesForm({createMovie}) {
+function withRouter(Component) {
+    function ComponentWithRouterProp(props) {
+      let params = useParams();
+      return (
+        <Component
+          {...props}
+          router={{ params }}
+        />
+      );
+    }
+  
+    return ComponentWithRouterProp;
+  }
+
+
+function MoviesForm({createMovie, editMovie, movie}) {
 
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
 	const [loading, setLoading] = useState(false);
-	const [bookError, setBookError] = useState(false);
-	const [data, setData] = useState();
 
 	const history = useNavigate();
 	function handleClick() {
 		history(-1);
 	}
-
-	const id = useParams();
 
 	const handleValidate = (values) => {
 		const errors = {};
@@ -49,41 +60,28 @@ function MoviesForm({createMovie}) {
 	}
 
 	useEffect(() => {
-		if (id.id !== undefined) {
+		if (movie !== undefined) {
 			setAdding(false);
 			setEditing(true);
-			axios.get(`http://localhost:5000/api/movies/${id.id}`).then((response) => {
-				setLoading(true);
-				setData(response.data)
-			}).catch(() => {
-				setBookError(true);
-			}).finally(() => {
-				setLoading(false);
-			})
 		}
 		else {
 			setEditing(false);
 			setAdding(true);
 		}
-	}, [id])
+	}, [])
 
 
 	
 	const handleSubmitEdit = (values) => {
-		setPending(true);
-		axios.put(`http://localhost:5000/api/movies/${id.id}`, values).then(() => {
-			setPending(false);
-			alert("Edycja przebiegła pomyślnie");
-			history.go(-1);
-		}).catch(() => {
-			setPending(false);
-			setError(true);
-		})
+		editMovie(values)
+		history('/movies')
+		alert("Edycja przebiegła pomyślnie");
 	}
 
 	const handleSubmitAdd = (values) => {
 		createMovie(values)
 		history('/movies');
+		alert('Dodano!')
 		}
 
 	
@@ -92,13 +90,14 @@ function MoviesForm({createMovie}) {
 			<Formik
 			enableReinitialize={true}
 			initialValues={
-				editing && data ?
+				editing && movie ?
 					{
-						title: data.title,
-						genre: data.genre,
-						release_date: data.release_date.slice(0, 10),
-						description: data.description,
-						image_url: data.image_url
+						id: movie.id,
+						title: movie.title,
+						genre: movie.genre,
+						release_date: movie.release_date.slice(0, 10),
+						description: movie.description,
+						image_url: movie.image_url
 					}
 					:
 					{
@@ -114,7 +113,6 @@ function MoviesForm({createMovie}) {
 			{ (formProps) => (
 				<div className="row justify-content-md-center">
 					<div className='container-add col'>
-						{bookError && <div> Nie udało się załadować danych książki</div>}
 						{loading && <div>Ładowanie...</div>}
 						<div className='button-back'>
 							<button className='btn btn-primary' type='button' onClick={handleClick}><RiArrowGoBackLine /></button>
@@ -155,7 +153,7 @@ function MoviesForm({createMovie}) {
 								<div>
 									{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
 									{editing && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
-									{adding && pending && !error && <button className='btn' disabled>Dodawanie książki...</button>}
+									{adding && pending && !error && <button className='btn' disabled>Dodawanie filmu...</button>}
 									{editing && pending && !error && <button className='btn' disabled>Zmieniam  dane..</button>}
 									{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
 								</div>
@@ -170,8 +168,15 @@ function MoviesForm({createMovie}) {
 	)
 }
 
+const mapStateToProps = (state,props) => {
+	return {
+		movie: getMovieDetails(state,props.router.params.id)
+	}
+}
+
 const mapDispatchToProps = ({
-    createMovie
+    createMovie,
+	editMovie
 });
 
-export default connect(null, mapDispatchToProps)(MoviesForm);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoviesForm));

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { getPersonDetails } from '../../ducks/Persons/selectors';
+import { deletePerson } from '../../ducks/Persons/operations';
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import { RiArrowGoBackLine } from 'react-icons/ri';
@@ -20,10 +21,14 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function PersonDetails ({person}) {
+function PersonDetails ({person, deletePerson}) {
+
+	async function handleDelete(person) {
+		await deletePerson(person)
+		history('/persons')
+	}
 
 	const history = useNavigate();
-	const [data, setData] = useState();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -60,7 +65,7 @@ function PersonDetails ({person}) {
 									</div>
 								</div>
 								<div className='buttons'>
-									{!deleting && !error && <button type='submit' className='btn'><AiFillDelete/></button>}
+									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person)}><AiFillDelete/></button>}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
@@ -82,5 +87,9 @@ const mapStateToProps = (state,props) => {
 	}
 }
 
-export default withRouter(connect(mapStateToProps, null)(PersonDetails));
+const mapDispatchToProps = {
+	deletePerson
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonDetails));
 

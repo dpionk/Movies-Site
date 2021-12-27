@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { connect } from 'react-redux';
 import { getMovieDetails } from "../../ducks/Movies/selectors";
+import { deleteMovie } from "../../ducks/Movies/operations";
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import { RiArrowGoBackLine } from 'react-icons/ri';
@@ -20,10 +21,11 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function MovieDetails ({movie}) {
+
+
+function MovieDetails ({movie, deleteMovie}) {
 
 	const history = useNavigate();
-	const [data, setData] = useState();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
@@ -31,6 +33,11 @@ function MovieDetails ({movie}) {
 
 	const handleClick = () => {
 		history(-1)
+	}
+
+	async function handleDelete(movie) {
+		await deleteMovie(movie)
+		history('/movies')
 	}
 
 	return (
@@ -69,7 +76,7 @@ function MovieDetails ({movie}) {
 									</div>
 								</div>
 								<div className="buttons">
-									{!deleting && !error && <button type='submit' className='btn'><AiFillDelete/></button>}
+									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}
 									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
@@ -91,5 +98,9 @@ const mapStateToProps = (state,props) => {
 	}
 }
 
-export default withRouter(connect(mapStateToProps, null)(MovieDetails));
+const mapDispatchToProps = {
+	deleteMovie
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MovieDetails));
 

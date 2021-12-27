@@ -30,9 +30,11 @@ function App({getMovieList, getPersonList}) {
 				<Route exact path='/movies' element={<Movies/>}/>
 				<Route exact path='/movies/:id' element={<MovieDetails/>}/>
 				<Route exact path='/movies/add' element={<MoviesForm/>}/>
+				<Route exact path='/movies/edit/:id' element={<MoviesForm/>}/>
 				<Route exact path='/persons' element={<Persons/>}/>
 				<Route exact path='/persons/:id' element={<PersonDetails/>}/>
 				<Route exact path='/persons/add' element={<PersonsForm/>}/>
+				<Route exact path='/persons/edit/:id' element={<PersonsForm/>}/>
 				<Route path='*' element={<PageNotFound/>}/>
 			</Routes>
 		</div>

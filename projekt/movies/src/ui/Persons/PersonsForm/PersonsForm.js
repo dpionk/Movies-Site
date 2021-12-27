@@ -1,13 +1,28 @@
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import { connect } from 'react-redux';
-import { createPerson } from '../../../ducks/Persons/operations';
+import { getPersonDetails } from '../../../ducks/Persons/selectors';
+import { createPerson, editPerson } from '../../../ducks/Persons/operations';
 import './PersonsForm.scss'
 
-function PersonsForm({createPerson}) {
+function withRouter(Component) {
+    function ComponentWithRouterProp(props) {
+      let params = useParams();
+      return (
+        <Component
+          {...props}
+          router={{ params }}
+        />
+      );
+    }
+  
+    return ComponentWithRouterProp;
+  }
+
+function PersonsForm({createPerson, editPerson, person}) {
+
 
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
@@ -15,14 +30,11 @@ function PersonsForm({createPerson}) {
 	const [adding, setAdding] = useState(false)
 	const [loading, setLoading] = useState(false);
 	const [bookError, setBookError] = useState(false);
-	const [data, setData] = useState();
 
 	const history = useNavigate();
 	function handleClick() {
 		history(-1);
 	}
-
-	const id = useParams();
 
 	const handleValidate = (values) => {
 		const errors = {};
@@ -46,36 +58,21 @@ function PersonsForm({createPerson}) {
 	}
 
 	useEffect(() => {
-		if (id.id !== undefined) {
+		if (person !== undefined) {
 			setAdding(false);
 			setEditing(true);
-			axios.get(`http://localhost:5000/api/persons/${id.id}`).then((response) => {
-				setLoading(true);
-				setData(response.data)
-			}).catch(() => {
-				setBookError(true);
-			}).finally(() => {
-				setLoading(false);
-			})
 		}
 		else {
 			setEditing(false);
 			setAdding(true);
 		}
-	}, [id])
+	}, [person])
 
 
 	
 	const handleSubmitEdit = (values) => {
-		setPending(true);
-		axios.put(`http://localhost:5000/api/persons/${id.id}`, values).then(() => {
-			setPending(false);
-			alert("Edycja przebiegła pomyślnie");
-			history.go(-1);
-		}).catch(() => {
-			setPending(false);
-			setError(true);
-		})
+		editPerson(values)
+		history('/persons');
 	}
 
 	const handleSubmitAdd = (values) => {
@@ -89,12 +86,13 @@ function PersonsForm({createPerson}) {
 			<Formik
 			enableReinitialize={true}
 			initialValues={
-				editing && data ?
-					{
-						first_name: data.first_name,
-						last_name: data.last_name,
-						birth_date: data.birth_date.slice(0, 10),
-						nationality: data.nationality
+				editing && person ?
+					{	
+						id: person.id,
+						first_name: person.first_name,
+						last_name: person.last_name,
+						birth_date: person.birth_date.slice(0, 10),
+						nationality: person.nationality
 					}
 					:
 					{
@@ -159,8 +157,14 @@ function PersonsForm({createPerson}) {
 	)
 }
 
+const mapStateToProps = (state, props) => {
+	return {
+		person: getPersonDetails(state,props.router.params.id)
+	}
+}
 const mapDispatchToProps = ({
-    createPerson
+    createPerson,
+	editPerson
 });
 
-export default connect(null, mapDispatchToProps)(PersonsForm);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonsForm));
