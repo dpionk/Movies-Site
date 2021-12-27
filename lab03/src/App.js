@@ -4,10 +4,13 @@ import ToDoList from './todos/ToDoList';
 import ToDo from './todos/ToDo';
 import NoteForm from './notes/NoteForm';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import NoteList from './notes/NoteList';
 import Note from './notes/Note';
 
 function App() {
+	const { t } = useTranslation('pl');
+
 	return (
 		<div className="App">
 			<BrowserRouter>
@@ -26,7 +29,7 @@ function App() {
 				</div>
 				<div>
 					<Link to='/notes/add'>
-						Add Note
+						{t('add_note')}
 					</Link>
 				</div>
 				<Switch>

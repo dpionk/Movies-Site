@@ -1,7 +1,7 @@
-import { incrementAction } from './actions'
+import { decrementAction, incrementAction } from './actions'
 import { connect } from 'react-redux';
 
-const Counter = ({counter, incrementAction}) => {
+const Counter = ({counter, incrementAction, decrementAction}) => {
 
 	return (
 		<div>
@@ -9,7 +9,16 @@ const Counter = ({counter, incrementAction}) => {
 		  <button onClick={incrementAction}>increment</button>
 	  </div>
 	  <div>
-		  <h3>{counter}</h3>
+		  <button onClick={decrementAction}>decrement</button>
+	  </div>
+	  <div>
+		  <button>Start decrementing</button>
+	  </div>
+	  <div>
+		  <button>Stop decrementing</button>
+	  </div>
+	  <div>
+		  <h2>{counter}</h2>
 	  </div>
 	  </div>
 	);
@@ -23,7 +32,8 @@ const Counter = ({counter, incrementAction}) => {
 };
 
 const mapDispatchToProps = dispatch =>  ({
-    incrementAction: state => dispatch(incrementAction(state))
+    incrementAction: state => dispatch(incrementAction(state)),
+	decrementAction: state => dispatch(decrementAction(state))
 });
 
 

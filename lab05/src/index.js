@@ -3,18 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore, compose } from 'redux';
 import { reducer } from './counter/reducer';
 import  alert  from './middlewares/Alert'
+import decrementing from './middlewares/Decrementing'
 import { Provider } from 'react-redux';
+import { createMiddleware } from 'redux-api-middleware';
 
-let store = createStore(
-	combineReducers(
-	  { 
-		counter: reducer
-	  }
-	), applyMiddleware(alert));
-  
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, applyMiddleware(createMiddleware(alert, decrementing)))
+
+
 ReactDOM.render(
   <React.StrictMode>
 	  <Provider store={store}>
