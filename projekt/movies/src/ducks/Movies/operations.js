@@ -51,3 +51,17 @@ export const editMovie = (modifiedMovie) => {
                 
     }
 }
+
+export const editDirector = (movie, director_id) => {
+	return async dispatch => {
+		axios.patch(`http://localhost:5000/api/movies/${movie.id}/director`, director_id).then(() => {
+			dispatch(actions.movieEditDirectorAction(movie,director_id))
+		}).catch((error) => {
+			if (error.response.data === 'DIRECTOR_NOT_EXISTS')
+			{
+				alert('Nie ma takiego reżysera!')
+			}
+			console.log(error)
+		})
+	}
+}

@@ -72,12 +72,12 @@ function PersonsForm({createPerson, editPerson, person}) {
 	
 	const handleSubmitEdit = (values) => {
 		editPerson(values)
-		history('/persons');
+		history('/persons/page/1');
 	}
 
 	const handleSubmitAdd = (values) => {
 		createPerson(values)
-		history('/persons');
+		history('/persons/page/1');
 		}
 
 	

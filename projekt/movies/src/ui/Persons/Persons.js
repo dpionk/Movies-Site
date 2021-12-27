@@ -1,13 +1,21 @@
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { getPersons } from '../../ducks/Persons/selectors'
 import Person from './Person'
 import { AiFillFilter } from 'react-icons/ai';
 import { BiSort } from 'react-icons/bi';
+import Pagination from '../Pagination/Pagination';
 import './Persons.scss';
 
 function Persons({persons}) {
 
-	const personList = persons.map((person) => {
+	const { id = "1" } = useParams();
+	const personsPerPage = 3;
+	const indexOfLastPerson = Number(id) * personsPerPage;
+	const indexOfFirstPerson = Number(id - 1) * personsPerPage;
+	const currentPersons = persons.slice(indexOfFirstPerson, indexOfLastPerson)
+
+	const personList = currentPersons.map((person) => {
 		const personInList = <Person 
 		first_name={person.first_name}
 		last_name={person.last_name}
@@ -33,6 +41,7 @@ function Persons({persons}) {
 						</div>
 					</div>
 					<div className="pagination-container">
+					<Pagination whatToShow='persons' data={persons} elementsPerPage={personsPerPage} />
 					</div>
 				</div>
 		</div>

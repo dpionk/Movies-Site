@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { connect } from 'react-redux';
+import { Formik, Field } from "formik";
+import { getPersonDetails } from '../../ducks/Persons/selectors';
 import { getMovieDetails } from "../../ducks/Movies/selectors";
-import { deleteMovie } from "../../ducks/Movies/operations";
+import { deleteMovie, editDirector } from "../../ducks/Movies/operations";
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import { RiArrowGoBackLine } from 'react-icons/ri';
@@ -21,15 +23,28 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
+function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 
+	const handleValidate = (values) => {
+		const errors = {};
 
-function MovieDetails ({movie, deleteMovie}) {
+		if (!values.id) {
+			errors.id = "Proszę podać id"
+		}
+		return errors;
+	}
+
+	async function handleSubmitDirector(director_id) {
+		await editDirector(movie, director_id)
+	}
+
 
 	const history = useNavigate();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [errorDelete, setErrorDelete] = useState(false);	
+	const [editingDirector, setEditDirector] = useState(false)
 
 	const handleClick = () => {
 		history(-1)
@@ -37,13 +52,13 @@ function MovieDetails ({movie, deleteMovie}) {
 
 	async function handleDelete(movie) {
 		await deleteMovie(movie)
-		history('/movies')
+		history('/movies/page/1')
 	}
 
 	return (
 		
 		<div>
-			{movie  &&
+			{movie && director &&
 				<div className="movie-detailed">
 					<div className="list-group-detailed" key={movie.id}>
 						<div className="list-group-item">
@@ -85,6 +100,44 @@ function MovieDetails ({movie, deleteMovie}) {
 								</div>
 							</div>
 						</div>
+						<div className="list-group-item">
+						<div className='persons-container'>
+						<div className="director-actors">
+						<div className='director'>
+							<div className='director-edit'>
+							<h4>reżyser</h4>
+							<button type='button' className='btn' onClick={() => { if (editingDirector) { 
+								setEditDirector(false)} else {setEditDirector(true)}}}><AiFillEdit/></button>
+							</div>
+							{director.hasOwnProperty('id') && !editingDirector && <div className='nav-item'><Link to={`/persons/${director.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{director.first_name} {director.last_name}</Link></div>}
+							{!director.hasOwnProperty('id') && !editingDirector && <div>Nie wybrano reżysera</div>}
+							{editingDirector ? <div>
+							<Formik
+							enableReinitialize={true}
+							initialValues={{id: movie.director_id ? movie.director_id : ''}}
+							validate={handleValidate}
+							onSubmit={handleSubmitDirector}
+							>
+							{(formProps) => (
+								<div className='mb-2'>
+									<label className='form-label'>id nowego reżysera</label>
+									<Field type='text' className='form-control' name='id' value={formProps.values.id ? formProps.values.id : ''}>
+									</Field>
+									{formProps.touched.id && formProps.errors.id ? <div className="error">{formProps.errors.id}</div> : null}
+									<button type='button' onClick={() => {formProps.handleSubmit(formProps.values.id)}} className='btn' >Zatwierdź</button>
+								</div>
+							)}
+							
+							</Formik></div> : null}
+						</div>
+						<div className='actors'>
+							<h4>aktorzy</h4>
+							<div>aktor 1</div>
+							<div>aktor 2</div>
+						</div>
+						</div>
+						</div>
+						</div>
 					</div>
 				</div>
 				}
@@ -93,13 +146,16 @@ function MovieDetails ({movie, deleteMovie}) {
 }
 
 const mapStateToProps = (state,props) => {
+	const movie = getMovieDetails(state,props.router.params.id)
 	return {
-		movie: getMovieDetails(state,props.router.params.id)
+		movie: movie,
+		director: movie && getPersonDetails(state,movie.director_id)
 	}
 }
 
 const mapDispatchToProps = {
-	deleteMovie
+	deleteMovie,
+	editDirector
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MovieDetails));

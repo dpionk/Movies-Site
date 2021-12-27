@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { AiFillStar } from 'react-icons/ai';
+import { connect } from 'react-redux';
 import './Filter.scss'
 
 function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilterRating, handleFilterReset }) {
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
-	const [starsClicked, setStarsClicked] = useState(false);
 
 	const handleClick = () => {
 		if (dropdownClicked) {
@@ -42,41 +41,12 @@ function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilt
 					<button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>
 						Gatunki
 					</button>
-					<div className={"dropdown-menu" + (dropdownClicked ? " show" : "")}>
+					{<div className={"dropdown-menu" + (dropdownClicked ? " show" : "")}>
 						{genres}
 					</div>
+}
 				</div>
 				<div className="form-check">
-					<div className="star-filter">
-						<label className="form-check-label" >
-							<AiFillStar color="#ffc107" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" />
-						</label>
-						<input className="form-check-input" type="checkbox" value="1" id="flexCheckDefault" onClick={() => { if (starsClicked) { setBookFilterRating(null); setStarsClicked(false) } else { setBookFilterRating(1); setStarsClicked(true) } }} />
-					</div>
-					<div className="star-filter">
-						<label className="form-check-label" >
-							<AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" />
-						</label>
-						<input className="form-check-input" type="checkbox" value="2" id="flexCheckDefault" onClick={() => { if (starsClicked) { setBookFilterRating(null); setStarsClicked(false) } else { setBookFilterRating(2); setStarsClicked(true) } }} />
-					</div>
-					<div className="star-filter">
-						<label className="form-check-label" >
-							<AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#e4e5e9" /><AiFillStar color="#e4e5e9" />
-						</label>
-						<input className="form-check-input" type="checkbox" value="3" id="flexCheckDefault" onClick={() => { if (starsClicked) { setBookFilterRating(null); setStarsClicked(false) } else { setBookFilterRating(3); setStarsClicked(true) } }} />
-					</div>
-					<div className="star-filter">
-						<label className="form-check-label" >
-							<AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#e4e5e9" />
-						</label>
-						<input className="form-check-input" type="checkbox" value="4" id="flexCheckDefault" onClick={() => { if (starsClicked) { setBookFilterRating(null); setStarsClicked(false) } else { setBookFilterRating(4); setStarsClicked(true) } }} />
-					</div>
-					<div className="star-filter">
-						<label className="form-check-label" >
-							<AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" /><AiFillStar color="#ffc107" />
-						</label>
-						<input className="form-check-input" type="checkbox" value="5" id="flexCheckDefault" onClick={() => { if (starsClicked) { setBookFilterRating(null); setStarsClicked(false) } else { setBookFilterRating(5); setStarsClicked(true) } }} />
-					</div>
 				</div>
 				<input type="text" className="form-control" placeholder="Szukaj po tytule..." onChange={handleChange} />
 				<button className="btn" onClick={handleFilterReset} >Cofnij filtrowanie</button>
@@ -85,4 +55,19 @@ function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilt
 	);
 }
 
-export default Filter;
+const mapStateToProps = (state) => {
+	return {
+	genreArray: state.movies.reduce((prev,curr) => {
+		if (prev.find((elem) => {
+			return elem.toLowerCase() === curr.genre.toLowerCase()
+		})) {
+			prev = [...prev]
+		}
+		else {
+		prev = [...prev, curr.genre.toLowerCase()]
+		}
+		return prev;
+	},[])
+	};
+}
+export default connect(mapStateToProps,null)(Filter);

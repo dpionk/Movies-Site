@@ -1,6 +1,6 @@
 import './Sort.scss'
 
-function Sort({ booksAlphabetic, booksByDate, booksByRating, booksDefault, alphabeticActive, dateActive, ratingActive, defaultActive }) {
+function Sort({ moviesAlphabetic, moviesByDate, moviesDefault, alphabeticActive, dateActive, defaultActive }) {
 
 	return (
 		
@@ -8,14 +8,14 @@ function Sort({ booksAlphabetic, booksByDate, booksByRating, booksDefault, alpha
 			<div className="filter-text">
 				Sortuj
 			</div>
-			{alphabeticActive && !dateActive && !ratingActive && !defaultActive && <button className="btn btn-primary" onClick={booksAlphabetic}>Alfabetycznie</button>}
-			{!alphabeticActive && <button className="btn" onClick={booksAlphabetic}>Alfabetycznie</button>}
-			{dateActive && !alphabeticActive && !ratingActive && !defaultActive && <button className="btn btn-primary" onClick={booksByDate}>Według daty</button>}
-			{!dateActive && <button className="btn" onClick={booksByDate}>Według daty</button>}
-			{ratingActive && !alphabeticActive && !defaultActive && !dateActive && <button className="btn btn-primary" onClick={booksByRating}>Według ocen</button>}
-			{ !ratingActive && <button className="btn" onClick={booksByRating}>Według ocen</button>}
-			{defaultActive && !alphabeticActive && !ratingActive && !dateActive && <button className="btn btn-primary" onClick={booksDefault}>Domyślnie</button>}
-			{!defaultActive && <button className="btn" onClick={booksDefault}>Domyślnie</button>}
+			{alphabeticActive && !dateActive && !defaultActive && <button className="btn btn-primary" onClick={moviesAlphabetic}>Alfabetycznie</button>}
+			{!alphabeticActive && <button className="btn" onClick={moviesAlphabetic}>Alfabetycznie</button>}
+			{dateActive && !alphabeticActive && !defaultActive && <button className="btn btn-primary" onClick={moviesByDate}>Według daty</button>}
+			{!dateActive && <button className="btn" onClick={moviesByDate}>Według daty</button>}
+			{/*{!alphabeticActive && !defaultActive && !dateActive && <button className="btn btn-primary" >Według liczby aktorów</button>}*/}
+			{/*{ !ratingActive && <button className="btn" onClick={moviesByRating}>Według liczby aktorów</button>}*/}
+			{defaultActive && !alphabeticActive && !dateActive && <button className="btn btn-primary" onClick={moviesDefault}>Domyślnie</button>}
+			{!defaultActive && <button className="btn" onClick={moviesDefault}>Domyślnie</button>}
 		</div>
 
 	);

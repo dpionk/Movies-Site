@@ -68,19 +68,19 @@ function MoviesForm({createMovie, editMovie, movie}) {
 			setEditing(false);
 			setAdding(true);
 		}
-	}, [])
+	}, [movie])
 
 
 	
 	const handleSubmitEdit = (values) => {
 		editMovie(values)
-		history('/movies')
+		history('/movies/page/1')
 		alert("Edycja przebiegła pomyślnie");
 	}
 
 	const handleSubmitAdd = (values) => {
 		createMovie(values)
-		history('/movies');
+		history('/movies/page/1');
 		alert('Dodano!')
 		}
 

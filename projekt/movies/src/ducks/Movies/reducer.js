@@ -15,6 +15,15 @@ export const movieReducer = (state = [], action) => {
 				}
 				return movie
 			})
+		case types.MOVIE_EDIT_DIRECTOR:
+			return state.map(movie => {
+				if (movie.id === action.payload.movie)
+					return {
+						...movie,
+						director_id: action.payload.director
+					}
+				return movie
+			})
         default:
             return state;
     }

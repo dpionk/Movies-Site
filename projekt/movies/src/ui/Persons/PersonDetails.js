@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
+import { getMoviesWhereDirected } from '../../ducks/Movies/selectors';
 import { getPersonDetails } from '../../ducks/Persons/selectors';
 import { deletePerson } from '../../ducks/Persons/operations';
 import { Link, useParams, useNavigate } from 'react-router-dom'
@@ -21,11 +22,11 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function PersonDetails ({person, deletePerson}) {
+function PersonDetails ({person, deletePerson, movies}) {
 
 	async function handleDelete(person) {
 		await deletePerson(person)
-		history('/persons')
+		history('/persons/page/1')
 	}
 
 	const history = useNavigate();
@@ -41,7 +42,7 @@ function PersonDetails ({person, deletePerson}) {
 	return (
 		
 		<div>
-			{person  &&
+			{person  && movies &&
 				<div className='person-detailed'>
 					<div className='list-group-detailed' key={person.id}>
 						<div className='list-group-item'>
@@ -74,6 +75,19 @@ function PersonDetails ({person, deletePerson}) {
 								</div>
 							</div>
 						</div>
+						<div className="list-group-item">
+							<div className='directed-acted-in'>
+								<div className='movies-directed'>
+								<h4>wyreżyserowane filmy</h4>
+								{movies.length !== 0 ? movies.map((movie) => { return <li key={movie.id}><Link style={{ textDecoration: 'none', color: 'gray'}} to={`/movies/${movie.id}`}>{movie.title}</Link></li>
+								}) : <div>Brak filmów</div>}
+								</div>
+								<div className='movies-acted-in'>
+								<h4>występował/a w</h4>
+								</div>
+							</div>
+							
+						</div>
 					</div>
 				</div>
 				}
@@ -82,8 +96,10 @@ function PersonDetails ({person, deletePerson}) {
 }
 
 const mapStateToProps = (state,props) => {
+	const person = getPersonDetails(state,props.router.params.id)
 	return {
-		person: getPersonDetails(state,props.router.params.id)
+		person: person,
+		movies: person && getMoviesWhereDirected(state, person.id)
 	}
 }
 
