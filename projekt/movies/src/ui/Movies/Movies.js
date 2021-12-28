@@ -13,7 +13,8 @@ import './Movies.scss';
 
 function Movies({movies}) {
 
-
+	const [movieFilterText, setMovieFilterText] = useState(null);
+	const [movieFilterGenre, setMovieFilterGenre] = useState(null);
 	const [shownMovies, setShownMovies] = useState([]);
 	const [movieSort, setMovieSort] = useState(null);
 	const [showSort, setShowSort] = useState(false);
@@ -23,18 +24,29 @@ function Movies({movies}) {
 	const [alphabeticActive, setAlphabeticActive] = useState(false);
 
 	useEffect(() => {
-		let books = [...movies]
+		let moviesToShow = [...movies]
 		if (movieSort) {
-			books = books.sort(movieSort)
+			moviesToShow = moviesToShow.sort(movieSort)
 		}
-		setShownMovies(books);
-	}, [movieSort, movies])
+		if (movieFilterGenre) {
+			moviesToShow = moviesToShow.filter(x => {return x.genre.toLowerCase() === movieFilterGenre})
+		}
+		if (movieFilterText) {
+			moviesToShow = moviesToShow.filter(x => {return x.title.toLowerCase().indexOf(movieFilterText.toLowerCase()) > -1})
+		}
+		setShownMovies(moviesToShow);
+	}, [movieSort, movies,  movieFilterText, movieFilterGenre])
 
 	const { id = "1" } = useParams();
 	const moviesPerPage = 3;
 	const indexOfLastMovie = Number(id) * moviesPerPage;
 	const indexOfFirstMovie = Number(id - 1) * moviesPerPage;
 	const currentMovies = shownMovies.slice(indexOfFirstMovie, indexOfLastMovie)
+
+	const handleFilterReset = () => {
+		setMovieFilterText(null);
+		setMovieFilterGenre(null);
+	}
 
 	const moviesAlphabetic = () => {
 		setMovieSort(() => (a, b) => {
@@ -100,8 +112,8 @@ function Movies({movies}) {
 							<button className="btn" onClick={handleFilter}><AiFillFilter/></button>
 							</div>
 							<div className="displaying">
-							{showSort ? <Sort alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} moviesAlphabetic={moviesAlphabetic} moviesByDate={moviesByDate} moviesDefault={moviesDefault}/> : null}
-							{showFilter ? <Filter/> : null}
+							{showSort ? <Sort whatToShow='movies' alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={moviesAlphabetic} byDate={moviesByDate} defaultSort={moviesDefault}/> : null}
+							{showFilter ? <Filter whatToShow='movies' setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
 							</div>
 						</div>
 						<div className="list-group">

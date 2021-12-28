@@ -3,6 +3,7 @@ import { getMovieList } from '../../ducks/Movies/operations';
 import { getPersonList } from '../../ducks/Persons/operations';
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
+import Main from '../Main/Main';
 import Navbar from '../Navbar/Navbar';
 import Movies from '../Movies/Movies';
 import MovieDetails from '../Movies/MovieDetails'
@@ -27,6 +28,7 @@ function App({getMovieList, getPersonList}) {
 		<Navbar/>
 		<div className='container'>
 			<Routes>
+				<Route exact path='/' element={<Main/>}/>
 				<Route exact path='/movies/page/:id' element={<Movies/>}/>
 				<Route exact path='/movies/:id' element={<MovieDetails/>}/>
 				<Route exact path='/movies/add' element={<MoviesForm/>}/>

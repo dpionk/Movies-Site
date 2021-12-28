@@ -24,9 +24,11 @@ function withRouter(Component) {
 
 function PersonDetails ({person, deletePerson, movies}) {
 
-	async function handleDelete(person) {
-		await deletePerson(person)
+	function handleDelete(person, movies) {
+		 deletePerson(person, movies)
+		 alert('Usunięto')
 		history('/persons/page/1')
+		
 	}
 
 	const history = useNavigate();
@@ -66,7 +68,7 @@ function PersonDetails ({person, deletePerson, movies}) {
 									</div>
 								</div>
 								<div className='buttons'>
-									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person)}><AiFillDelete/></button>}
+									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, movies)}><AiFillDelete/></button>}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>

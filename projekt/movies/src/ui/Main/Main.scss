@@ -1,0 +1,76 @@
+@import "~bootstrap/scss/bootstrap";
+
+.list-group {
+	display:flex;
+	flex-direction: column;
+	gap:20px;
+	.list-group-item{
+		padding:20px;
+		border-radius: 20px;
+		.newMovies {
+			display:flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+
+			gap: 20px;
+				.movies {
+					width:100%;
+					display:flex;
+					align-items: center;
+					justify-content: center;
+					gap:20px;
+				img{
+				width:200px;
+				height:300px;
+				border-radius: 20px;
+				}
+			}
+		}
+
+		.charts {
+			display:grid;
+			grid-template-columns: 50% 50%;
+			gap:50px;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+
+			.chart {
+				padding:10px;
+			}
+		}
+	}
+}
+
+@media (max-width: 768px) {
+
+			.movies {
+				width:100%;
+				display:flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap:20px;
+			
+		}
+		img{
+			height: 150px;
+			width: 100px;
+			border-radius: 20px;
+		}
+		.charts {
+			
+			justify-content: center;
+			align-items: center;
+			.chart {
+					width:100%;
+					height:100%;
+				.chart-bar {
+					width:100%;
+					height:100%;
+				}
+			}
+		}
+
+}

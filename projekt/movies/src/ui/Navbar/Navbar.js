@@ -26,6 +26,11 @@ function Navbar() {
 				<div className={"collapse navbar-collapse" + (clicked ? " show" : "")} id="navbarTogglerDemo02">
 					<ul className='navbar-nav .navbar-nav-scroll me-auto mb-2 mb-lg-0'>
 						<li className='nav-item'>
+						<Link to="/" style={{ textDecoration: 'none' }}>
+								<div className="nav-link">Strona główna</div>
+							</Link>
+						</li>
+						<li className='nav-item'>
 						<Link to="/movies/page/1" style={{ textDecoration: 'none' }}>
 								<div className="nav-link">Filmy</div>
 							</Link>

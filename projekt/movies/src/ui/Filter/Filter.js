@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import './Filter.scss'
 
-function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilterRating, handleFilterReset }) {
+function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFilterGenre, handleFilterReset }) {
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
 
@@ -17,20 +17,28 @@ function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilt
 	};
 
 	const handleChange = (event) => {
-		setBookFilterGenre(null);
-		setBookFilterRating(null);
-		setBookFilterText(event.target.value);
+		setFilterGenre(null);
+		setFilterText(event.target.value);
 
 	};
 
 	const genres = genreArray.map((genre) => {
 		return (
 			<button onClick={() => {
-				setBookFilterRating(null);
-				setBookFilterText(null);
-				setBookFilterGenre(genre);
+				setFilterText(null);
+				setFilterGenre(genre);
 			}}
 				key={genre} className="dropdown-item">{genre}</button>
+		)
+	})
+
+	const nationalities = nationalityArray.map((nationality) => {
+		return (
+			<button onClick={() => {
+				setFilterText(null);
+				setFilterGenre(nationality);
+			}}
+				key={nationality} className="dropdown-item">{nationality}</button>
 		)
 	})
 
@@ -39,16 +47,16 @@ function Filter({ genreArray, setBookFilterText, setBookFilterGenre, setBookFilt
 			<ul className="list-group filter">
 				<div className="dropdown">
 					<button className="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={handleClick}>
-						Gatunki
+						{whatToShow === 'movies' ? 'Gatunki' : 'Narodowości'}
 					</button>
 					{<div className={"dropdown-menu" + (dropdownClicked ? " show" : "")}>
-						{genres}
+						{whatToShow === 'movies' ? genres : nationalities}
 					</div>
 }
 				</div>
 				<div className="form-check">
 				</div>
-				<input type="text" className="form-control" placeholder="Szukaj po tytule..." onChange={handleChange} />
+				<input type="text" className="form-control" placeholder={ whatToShow === 'movies' ? "Szukaj po tytule..." : "Szukaj po nazwisku..."} onChange={handleChange} />
 				<button className="btn" onClick={handleFilterReset} >Cofnij filtrowanie</button>
 			</ul>
 		</div>
@@ -67,7 +75,19 @@ const mapStateToProps = (state) => {
 		prev = [...prev, curr.genre.toLowerCase()]
 		}
 		return prev;
+	},[]),
+	
+	nationalityArray: state.persons.reduce((prev,curr) => {
+		if (prev.find((elem) => {
+			return elem.toLowerCase() === curr.nationality.toLowerCase()
+		})) {
+			prev = [...prev]
+		}
+		else {
+		prev = [...prev, curr.nationality.toLowerCase()]
+		}
+		return prev;
 	},[])
-	};
+}
 }
 export default connect(mapStateToProps,null)(Filter);
