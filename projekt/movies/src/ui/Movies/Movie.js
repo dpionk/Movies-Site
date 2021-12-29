@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-function Movie({id, title, director, image_url}) {
+function Movie({id, title, image_url}) {
 	return (
 		<li className='list-group-item'>
 			<img src={image_url} alt='' />
@@ -10,9 +10,6 @@ function Movie({id, title, director, image_url}) {
 						{title}
 					</button>
 				</Link>
-				<div className='author'>
-					{director}
-				</div>
 			</div>
 		</li>
 	);

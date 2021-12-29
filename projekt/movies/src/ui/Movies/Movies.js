@@ -95,7 +95,6 @@ function Movies({movies}) {
 	const movieList = currentMovies.map((movie) => {
 		const movieInList = <Movie 
 		title={movie.title}
-		director={movie.director}
 		image_url={movie.image_url}
 		key={movie.id}
 		id={movie.id}/>

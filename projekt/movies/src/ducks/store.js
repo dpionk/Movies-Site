@@ -2,6 +2,7 @@ import thunk from 'redux-thunk';
 import {createStore, applyMiddleware, combineReducers, compose} from 'redux';
 import { movieReducer } from './Movies/reducer';
 import { personReducer } from './Persons/reducer';
+import { actorReducer } from './Actors/reducer'
 import logger from 'redux-logger';
 import { createMiddleware } from 'redux-api-middleware';
 
@@ -9,7 +10,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const combinedReducers = combineReducers({
   movies: movieReducer,
-  persons: personReducer
+  persons: personReducer,
+  actors: actorReducer
 });
 
 const store = createStore(combinedReducers, 

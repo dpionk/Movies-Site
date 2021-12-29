@@ -73,15 +73,41 @@ function MoviesForm({createMovie, editMovie, movie}) {
 
 	
 	const handleSubmitEdit = (values) => {
+
+		if (!isNaN(Number(values.director)) ) {
+			values = {
+				...values,
+				director_id: Number(values.director)
+			}
+		}
+
+		else {
+		values = {
+			...values,
+			director_id: -1
+		}
+	}
 		editMovie(values)
-		history('/movies/page/1')
-		alert("Edycja przebiegła pomyślnie");
+		
 	}
 
 	const handleSubmitAdd = (values) => {
+
+		if (!isNaN(Number(values.director)) ) {
+			values = {
+				...values,
+				director_id: Number(values.director)
+			}
+		}
+
+		else {
+		values = {
+			...values,
+			director_id: null
+		}
+	}
+		console.log(values)
 		createMovie(values)
-		history('/movies/page/1');
-		alert('Dodano!')
 		}
 
 	
@@ -97,7 +123,8 @@ function MoviesForm({createMovie, editMovie, movie}) {
 						genre: movie.genre,
 						release_date: movie.release_date.slice(0, 10),
 						description: movie.description,
-						image_url: movie.image_url
+						image_url: movie.image_url,
+						director_id: movie.director_id
 					}
 					:
 					{
@@ -105,7 +132,8 @@ function MoviesForm({createMovie, editMovie, movie}) {
 						genre: '',
 						release_date: '',
 						description: '',
-						image_url: ''
+						image_url: '',
+						director_id: ''
 					}
 			}
 			validate={handleValidate}
@@ -149,6 +177,11 @@ function MoviesForm({createMovie, editMovie, movie}) {
 									<Field type='text' className='form-control' name='image_url' value={formProps.values.image_url ? formProps.values.image_url : ''}>
 									</Field>
 									{formProps.touched.image_url && formProps.errors.image_url ? <div className="error">{formProps.errors.image_url}</div> : null}
+								</div>
+								<div className='mb-2'>
+									<label className='form-label'>Id reżysera (opcjonalnie)</label>
+									<Field type='text' className='form-control' name='director' value={formProps.values.director_id ? formProps.values.director_id : ''}>
+									</Field>
 								</div>
 								<div>
 									{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}

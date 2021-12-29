@@ -17,11 +17,12 @@ export const movieReducer = (state = [], action) => {
 			})
 		case types.MOVIE_EDIT_DIRECTOR:
 			return state.map(movie => {
-				if (movie.id === action.payload.movie)
+				if (movie.id === action.payload.movie){
 					return {
 						...movie,
-						director_id: action.payload.director
+						director_id: action.payload.director.id
 					}
+				}
 				return movie
 			})
         default:

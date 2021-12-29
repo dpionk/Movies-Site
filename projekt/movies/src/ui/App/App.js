@@ -1,6 +1,7 @@
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import { getMovieList } from '../../ducks/Movies/operations';
 import { getPersonList } from '../../ducks/Persons/operations';
+import { getActorList } from '../../ducks/Actors/operations'
 import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import Main from '../Main/Main';
@@ -15,12 +16,13 @@ import PageNotFound from '../PageNotFound/PageNotFound'
 import './App.scss'
 
 
-function App({getMovieList, getPersonList}) {
+function App({getMovieList, getPersonList, getActorList}) {
 	
 	useEffect(() => {
         getMovieList();
 		getPersonList();
-    }, [getMovieList, getPersonList]);
+		getActorList();
+    }, [getMovieList, getPersonList, getActorList]);
 
   return (
 	  <BrowserRouter>
@@ -47,7 +49,8 @@ function App({getMovieList, getPersonList}) {
 
 const mapDispatchToProps = {
 	getMovieList,
-	getPersonList
+	getPersonList,
+	getActorList
 }
 
 export default connect(null, mapDispatchToProps)(App);

@@ -16,12 +16,13 @@ export const createMovie = (newMovie) => {
 
             axios.post('http://localhost:5000/api/movies', newMovie).then((response) => {
 				dispatch(actions.movieCreateAction(response.data));
+				alert('Dodano!')
 			}).catch((error) => {
 				if (error.response.data === 'TITLE_DUPLICATE') {
 					alert('Zduplikowany tytuł!')
 				}
 				if (error.response.data === 'DIRECTOR_NOT_EXISTS') {
-					alert('Nie ma takiego reżysera!')
+					alert('Nie ma takiej osoby!')
 				}
 			})
     }
@@ -41,10 +42,12 @@ export const deleteMovie = (movieToDelete) => {
 export const editMovie = (modifiedMovie) => {
 	return async dispatch => {
             axios.put(`http://localhost:5000/api/movies/${modifiedMovie.id}`, modifiedMovie).then((response) => {
+				console.log(modifiedMovie.director)
 					dispatch(actions.movieEditAction(response.data))
+					alert("Edycja przebiegła pomyślnie");
 			}).catch((error) => {
 				if (error.response.data === 'DIRECTOR_NOT_EXISTS') {
-					alert('Nie ma takiego reżysera!')
+					alert('Nie ma takiej osoby!')
 				}
 				console.log(error)
 			})
@@ -59,7 +62,7 @@ export const editDirector = (movie, director_id) => {
 		}).catch((error) => {
 			if (error.response.data === 'DIRECTOR_NOT_EXISTS')
 			{
-				alert('Nie ma takiego reżysera!')
+				alert('Nie ma takiej osoby!')
 			}
 			console.log(error)
 		})

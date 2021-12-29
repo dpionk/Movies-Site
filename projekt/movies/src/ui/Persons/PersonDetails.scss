@@ -35,6 +35,9 @@
 			  flex-direction: column;
 			  align-items: center;
 			  justify-content: center;
+			  li {
+				list-style-type:none;
+			}
 		}
 	  }
       .info-buttons {

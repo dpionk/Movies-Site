@@ -8,6 +8,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import './MovieDetails.scss'
+import { getActorsFromMovie } from "../../ducks/Actors/selectors";
 
 function withRouter(Component) {
     function ComponentWithRouterProp(props) {
@@ -23,7 +24,14 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function MovieDetails ({movie, deleteMovie, director, editDirector}) {
+function MovieDetails ({movie, deleteMovie, director, editDirector, actors}) {
+
+	const history = useNavigate();
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+	const [deleting, setDeleting] = useState(false);
+	const [errorDelete, setErrorDelete] = useState(false);	
+	const [editingDirector, setEditDirector] = useState(false)
 
 	const handleValidate = (values) => {
 		const errors = {};
@@ -36,15 +44,11 @@ function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 
 	async function handleSubmitDirector(director_id) {
 		await editDirector(movie, director_id)
+		setEditDirector(false)
 	}
 
 
-	const history = useNavigate();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-	const [deleting, setDeleting] = useState(false);
-	const [errorDelete, setErrorDelete] = useState(false);	
-	const [editingDirector, setEditDirector] = useState(false)
+
 
 	const handleClick = () => {
 		history(-1)
@@ -55,10 +59,13 @@ function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 		history('/movies/page/1')
 	}
 
+	const actorsToShow = actors.map((actor) => {
+		return <div key={actor.id}> <Link to={`/persons/${actor.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{actor.first_name} {actor.last_name}</Link><button className='btn'><AiFillDelete/></button> </div> 
+	})
 	return (
 		
 		<div>
-			{movie && director &&
+			{movie && director && actors &&
 				<div className="movie-detailed">
 					<div className="list-group-detailed" key={movie.id}>
 						<div className="list-group-item">
@@ -79,9 +86,6 @@ function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 										<div className="button-back">
 											<button className="btn" type="button" onClick={handleClick}><RiArrowGoBackLine/></button>
 										</div>
-									</div>
-									<div className="author">
-										{movie.director}
 									</div>
 									<div className="genre">
 										{movie.genre}
@@ -132,8 +136,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 						</div>
 						<div className='actors'>
 							<h4>aktorzy</h4>
-							<div>aktor 1</div>
-							<div>aktor 2</div>
+							{ actors.length !== 0 ? actorsToShow : <div>Nie ma jeszcze żadnych aktorów</div>}
 						</div>
 						</div>
 						</div>
@@ -147,9 +150,13 @@ function MovieDetails ({movie, deleteMovie, director, editDirector}) {
 
 const mapStateToProps = (state,props) => {
 	const movie = getMovieDetails(state,props.router.params.id)
+	const director = movie ? getPersonDetails(state,movie.director_id) : {}
 	return {
 		movie: movie,
-		director: movie && getPersonDetails(state,movie.director_id)
+		director: director,
+		actors: movie ? getActorsFromMovie(state, movie.id).map((element) => {
+			return getPersonDetails(state, element.person_id)
+		}) : []
 	}
 }
 
