@@ -56,6 +56,11 @@ function MoviesForm({createMovie, editMovie, movie}) {
 		if (!values.image_url) {
 			errors.image_url = "Link nie może być pusty"
 		}
+
+		else if (isNaN(Number(values.director_id)) || (values.director_id !== "" && isNaN(parseInt(values.director_id)))) {
+			errors.director_id = "Podano złe id"
+		}
+
 		return errors;
 	}
 
@@ -73,39 +78,24 @@ function MoviesForm({createMovie, editMovie, movie}) {
 
 	
 	const handleSubmitEdit = (values) => {
-
-		if (!isNaN(Number(values.director)) ) {
-			values = {
-				...values,
-				director_id: Number(values.director)
-			}
+		if (values.director_id === "") {
+			values.director_id = null
 		}
-
 		else {
-		values = {
-			...values,
-			director_id: -1
+			values.director_id = parseInt(values.director_id)
 		}
-	}
-		editMovie(values)
+	console.log(values)
+	editMovie(values)
 		
 	}
 
 	const handleSubmitAdd = (values) => {
-
-		if (!isNaN(Number(values.director)) ) {
-			values = {
-				...values,
-				director_id: Number(values.director)
-			}
+		if (values.director_id === "") {
+			values.director_id = null
 		}
-
 		else {
-		values = {
-			...values,
-			director_id: null
+			values.director_id = parseInt(values.director_id)
 		}
-	}
 		console.log(values)
 		createMovie(values)
 		}
@@ -180,8 +170,10 @@ function MoviesForm({createMovie, editMovie, movie}) {
 								</div>
 								<div className='mb-2'>
 									<label className='form-label'>Id reżysera (opcjonalnie)</label>
-									<Field type='text' className='form-control' name='director' value={formProps.values.director_id ? formProps.values.director_id : ''}>
+									<Field type='text' className='form-control' name='director_id' value={formProps.values.director_id ? formProps.values.director_id : ''}>
 									</Field>
+									{formProps.touched.director_id && formProps.errors.director_id ? <div className="error">{formProps.errors.director_id}</div> : null}
+
 								</div>
 								<div>
 									{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}

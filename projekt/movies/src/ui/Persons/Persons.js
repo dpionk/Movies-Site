@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPersons } from '../../ducks/Persons/selectors'
+import { getActors } from '../../ducks/Actors/selectors'
 import Person from './Person'
 import { AiFillFilter } from 'react-icons/ai';
 import { BiSort } from 'react-icons/bi';
@@ -10,7 +11,7 @@ import Sort from '../Sort/Sort';
 import Filter from '../Filter/Filter';
 import './Persons.scss';
 
-function Persons({persons}) {
+function Persons({persons, actors}) {
 
 	const [personFilterText, setPersonFilterText] = useState(null);
 	const [personFilterNationality, setPersonFilterNationality] = useState(null);
@@ -21,6 +22,7 @@ function Persons({persons}) {
 	const [dateActive, setDateActive] = useState(false);
 	const [defaultActive, setDefaultActive] = useState(false);
 	const [alphabeticActive, setAlphabeticActive] = useState(false);
+	const [actorActive, setActorActive] = useState(false);
 
 	const { id = "1" } = useParams();
 	const personsPerPage = 3;
@@ -29,7 +31,22 @@ function Persons({persons}) {
 	const currentPersons = shownPersons.slice(indexOfFirstPerson, indexOfLastPerson)
 
 	useEffect(() => {
-		let personsToShow = [...persons]
+		let personsToShow = persons.map((person) => {
+			for (let i=0;i<actors.length;i++) {
+				if (actors[i][0] === person.id) {
+					return {
+						...person,
+						'movies_played': actors[i][1]
+					}
+				}
+
+
+			}
+			return {
+				...person,
+				'movies_played': 0
+			}
+		})
 		if (personSort) {
 			personsToShow = personsToShow.sort(personSort)
 		}
@@ -40,7 +57,7 @@ function Persons({persons}) {
 			personsToShow = personsToShow.filter(x => {return x.last_name.toLowerCase().indexOf(personFilterText.toLowerCase()) > -1})
 		}
 		setShownPersons(personsToShow);
-	}, [personSort, persons, personFilterNationality, personFilterText])
+	}, [personSort, persons, personFilterNationality, personFilterText, actors])
 
 	const personsAlphabetic = () => {
 		setPersonSort(() => (a, b) => {
@@ -48,6 +65,7 @@ function Persons({persons}) {
 		})
 		setAlphabeticActive(true);
 		setDateActive(false);
+		setActorActive(false);
 		setDefaultActive(false);
 	};
 
@@ -57,13 +75,26 @@ function Persons({persons}) {
 		})
 		setAlphabeticActive(false);
 		setDateActive(true);
+		setActorActive(false);
 		setDefaultActive(false);
 	};
+
+	const personsByActors = () => {
+
+		setPersonSort(() => (a,b) => {
+			return (a.movies_played < b.movies_played ? 1 : -1)
+		})
+		setAlphabeticActive(false);
+		setDateActive(false);
+		setDefaultActive(false);
+		setActorActive(true);
+	}
 
 	const personsDefault = () => {
 		setPersonSort(null);
 		setAlphabeticActive(false);
 		setDateActive(false);
+		setActorActive(false);
 		setDefaultActive(true);
 	};
 
@@ -110,7 +141,7 @@ function Persons({persons}) {
 							<button className="btn" onClick={handleFilter}><AiFillFilter/></button>
 							</div>
 							<div className="displaying">
-							{showSort ? <Sort whatToShow='persons' alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={personsAlphabetic} byDate={personsByDate} defaultSort={personsDefault}/> : null}
+							{showSort ? <Sort whatToShow='persons' personsByActors={personsByActors} actorActive={actorActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={personsAlphabetic} byDate={personsByDate} defaultSort={personsDefault}/> : null}
 							{showFilter ? <Filter setFilterText={setPersonFilterText} setFilterGenre={setPersonFilterNationality} handleFilterReset={handleFilterReset}/> : null}
 							</div>
 						</div>
@@ -128,7 +159,24 @@ function Persons({persons}) {
 
 const mapStateToProps = (state) => {
 	return {
-		persons: getPersons(state)
+		persons: getPersons(state),
+		actors: getActors(state).reduce((prev,curr) => {
+			let key = curr['person_id']
+			if (!prev.find((element) => element[0] === key)) {
+				prev = [...prev, [key, 1]]
+			}
+			else {
+				prev = prev.map((element) => {
+					if (element[0] === key) {
+						return [key, element[1] + 1]
+					}
+					return element
+				})
+			}
+		return prev
+	}, [] ).sort((a, b) => {
+		return (a[1] < b[1]) ? 1 : -1
+	})
 	};
 }
 
