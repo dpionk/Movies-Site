@@ -17,6 +17,7 @@ export const createPerson = (newPerson) => {
 	return async dispatch => {
             axios.post('http://localhost:5000/api/persons', newPerson).then((response) => {
 				dispatch(actions.personCreateAction(response.data));
+				alert('Dodano')
 			}).catch((error) => {
 				console.log(error)
 			})  
@@ -28,6 +29,7 @@ export const deletePerson = (personToDelete, moviesWhereDirected, moviesWhereAct
 	return async dispatch => {
             axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`).then(() => {
 				dispatch(actions.personDeleteAction(personToDelete));
+				alert('Usunięto')
 			}).catch((error) => {
 				console.log(error)
 			})		
@@ -50,6 +52,7 @@ export const deletePerson = (personToDelete, moviesWhereDirected, moviesWhereAct
 					dispatch(actorActions.actorDeleteAction(personToDelete, moviesWhereActed[i]));
 				}
 				dispatch(actions.personDeleteAction(personToDelete));
+				alert('Usunięto')
 			}).catch((error) => {
 				console.log(error)
 			})		
@@ -62,6 +65,7 @@ export const editPerson = (modifiedPerson) => {
 	return async dispatch => {
 		axios.put(`http://localhost:5000/api/persons/${modifiedPerson.id}`, modifiedPerson).then((response) => {
 			dispatch(actions.personEditAction(response.data))
+			alert("Edycja przebiegła pomyślnie")
 		}).catch((error) => {
 			console.log(error)
 		})

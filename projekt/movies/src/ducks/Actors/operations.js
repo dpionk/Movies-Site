@@ -28,6 +28,7 @@ export const createActor = (movie,actor) => {
 
             axios.post(`http://localhost:5000/api/movies/${movie.id}/actors`, { 'id' : actor.id}).then((response) => {
 				dispatch(actions.actorCreateAction(response.data));
+				alert('Dodano aktora')
 			}).catch((error) => {
 				if (error.response.data === 'ELEMENT_NOT_EXIST') {
 					alert('Nie ma takiej osoby!')

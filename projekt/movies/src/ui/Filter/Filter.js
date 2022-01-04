@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import './Filter.scss'
 
-function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFilterGenre, handleFilterReset }) {
+function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFilterGenre, handleFilterReset, setFilterYear }) {
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
 
@@ -25,6 +25,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 	const genres = genreArray.map((genre) => {
 		return (
 			<button onClick={() => {
+				setFilterYear(null);
 				setFilterText(null);
 				setFilterGenre(genre);
 			}}
@@ -35,6 +36,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 	const nationalities = nationalityArray.map((nationality) => {
 		return (
 			<button onClick={() => {
+				setFilterYear(null);
 				setFilterText(null);
 				setFilterGenre(nationality);
 			}}
@@ -52,9 +54,28 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 					{<div className={"dropdown-menu" + (dropdownClicked ? " show" : "")}>
 						{whatToShow === 'movies' ? genres : nationalities}
 					</div>
-}
+}				
 				</div>
+
 				<div className="form-check">
+				{ whatToShow === 'movies' ? <div className="star-filter">
+						
+						<label className="form-check-label" >
+							tegoroczne
+						</label>
+						<input className="form-check-input" type="checkbox" value="year" id="flexCheckDefault" onClick={() => {
+				setFilterYear(2022);
+				setFilterText(null);
+				setFilterGenre(null);
+			}} />
+					</div> : <div className="star-filter">
+						
+						<label className="form-check-label" >
+							coś
+						</label>
+						<input className="form-check-input" type="checkbox" value="2022" id="flexCheckDefault" onClick={() => { }} />
+					</div>}
+
 				</div>
 				<input type="text" className="form-control" placeholder={ whatToShow === 'movies' ? "Szukaj po tytule..." : "Szukaj po nazwisku..."} onChange={handleChange} />
 				<button className="btn" onClick={handleFilterReset} >Cofnij filtrowanie</button>

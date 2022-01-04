@@ -16,6 +16,7 @@ function Movies({movies, actors}) {
 
 	console.log(movies)
 
+	const [movieFilterYear, setMovieFilterYear] = useState(null)
 	const [movieFilterText, setMovieFilterText] = useState(null);
 	const [movieFilterGenre, setMovieFilterGenre] = useState(null);
 	const [shownMovies, setShownMovies] = useState([]);
@@ -51,8 +52,11 @@ function Movies({movies, actors}) {
 		if (movieFilterText) {
 			moviesToShow = moviesToShow.filter(x => {return x.title.toLowerCase().indexOf(movieFilterText.toLowerCase()) > -1})
 		}
+		if (movieFilterYear) {
+			moviesToShow = moviesToShow.filter(x => {return new Date(x.release_date).getFullYear() === movieFilterYear})
+		}
 		setShownMovies(moviesToShow);
-	}, [movieSort, movies,  movieFilterText, movieFilterGenre,actors])
+	}, [movieSort, movies,  movieFilterText, movieFilterGenre,actors, movieFilterYear])
 
 	const { id = "1" } = useParams();
 	const moviesPerPage = 3;
@@ -61,6 +65,7 @@ function Movies({movies, actors}) {
 	const currentMovies = shownMovies.slice(indexOfFirstMovie, indexOfLastMovie)
 
 	const handleFilterReset = () => {
+		setMovieFilterYear(null);
 		setMovieFilterText(null);
 		setMovieFilterGenre(null);
 	}
@@ -142,11 +147,11 @@ function Movies({movies, actors}) {
 							</div>
 							<div className="displaying">
 							{showSort ? <Sort whatToShow='movies' moviesByActors={moviesByActors} actorMovieActive={actorMovieActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={moviesAlphabetic} byDate={moviesByDate} defaultSort={moviesDefault}/> : null}
-							{showFilter ? <Filter whatToShow='movies' setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
+							{showFilter ? <Filter whatToShow='movies' setFilterYear={setMovieFilterYear} setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
 							</div>
 						</div>
 						<div className="list-group">
-							{movieList && movieList}
+							{movieList.length !== 0 ? movieList : 'Brak filmów'}
 						</div>
 					</div>
 					<div className="pagination-container">

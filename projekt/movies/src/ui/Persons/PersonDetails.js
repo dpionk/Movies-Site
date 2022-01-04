@@ -26,7 +26,6 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 
 	function handleDelete(person, moviesDirected, moviesActed) {
 		 deletePerson(person, moviesDirected, moviesActed)
-		 alert('Usunięto')
 		history('/persons/page/1')
 		
 	}

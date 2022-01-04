@@ -53,6 +53,7 @@ export const deleteMovie = (movieToDelete, actors) => {
 					dispatch(actorActions.actorDeleteAction(actors[i], movieToDelete));
 				}
 				dispatch(actions.movieDeleteAction(movieToDelete));
+				alert('Usunięto')
 			}).catch((error) => {
 				console.log(error)
 			})		
