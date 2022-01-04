@@ -108,7 +108,7 @@ function Main({movies, nationalities, genres}) {
 						<div className='movies'>
 					{ movies.length >= 3 ? movies.sort((a,b) => (a.release_date < b.release_date) ? 1 : ((b.release_date < a.release_date) ? -1 : 0)).slice(0,3).map((movie) => {
 						return (
-							<Link to={`/movies/${movie.id}`} key={movie.id}><img src={movie.image_url} alt="" /></Link>
+							<Link className='image' to={`/movies/${movie.id}`} key={movie.id}><img src={movie.image_url} alt="" /></Link>
 							
 						)
 					}) : null}

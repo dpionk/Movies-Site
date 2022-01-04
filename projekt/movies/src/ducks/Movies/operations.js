@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as actions from './actions';
+import * as actorActions from '../Actors/actions'
 
 export const getMovieList = () => {
 	return async dispatch => {
@@ -32,14 +33,30 @@ export const createMovie = (newMovie) => {
     }
 }
 
-export const deleteMovie = (movieToDelete) => {
+export const deleteMovie = (movieToDelete, actors) => {
 	return async dispatch => {
-
+			if (actors.length === 0) {
             axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`).then(() => {
 				dispatch(actions.movieDeleteAction(movieToDelete));
 			}).catch((error) => {
 				console.log(error)
 			})
+		}
+		else {
+			let promiseArray = actors.map((actor) => {
+				return axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}/actors/${actor.id}`)
+			})
+			promiseArray = [...promiseArray, axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`)]
+
+			Promise.all(promiseArray).then(() => {
+				for (let i  in actors) {
+					dispatch(actorActions.actorDeleteAction(actors[i], movieToDelete));
+				}
+				dispatch(actions.movieDeleteAction(movieToDelete));
+			}).catch((error) => {
+				console.log(error)
+			})		
+		}
     }
 }
 

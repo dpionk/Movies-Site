@@ -8,8 +8,8 @@ export const getMoviesWhereActed = (state, actor_id) =>  { return state.actors.f
 
 export const getGenres = (state) => {
 	return state.movies.reduce((prev,curr) => {
-		let key = curr['genre'].toLowerCase()
-		if (!prev.find((element) => element[0] === key)) {
+		let key = curr['genre']
+		if (!prev.find((element) => element[0] === key.toLowerCase())) {
 			prev = [...prev, [key, 1]]
 		}
 		else {

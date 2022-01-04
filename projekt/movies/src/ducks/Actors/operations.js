@@ -23,10 +23,11 @@ export const getMovieActorList = (movie) => {
 
 
 export const createActor = (movie,actor) => {
+
 	return async dispatch => {
 
             axios.post(`http://localhost:5000/api/movies/${movie.id}/actors`, { 'id' : actor.id}).then((response) => {
-				dispatch(actions.actorCreateAction(actor, movie));
+				dispatch(actions.actorCreateAction(response.data));
 			}).catch((error) => {
 				if (error.response.data === 'ELEMENT_NOT_EXIST') {
 					alert('Nie ma takiej osoby!')
@@ -35,11 +36,11 @@ export const createActor = (movie,actor) => {
     }
 }
 
-export const deleteMovie = (movie,actor) => {
+export const deleteMovieActor = (movie,actor) => {
 	return async dispatch => {
-
-            axios.delete(`http://localhost:5000/api/movies/${movie.id}/${actor.id}`).then(() => {
+            axios.delete(`http://localhost:5000/api/movies/${movie.id}/actors/${actor.id}`).then(() => {
 				dispatch(actions.actorDeleteAction(actor,movie));
+				alert('Usunięto aktora')
 			}).catch((error) => {
 				console.log(error)
 			})

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 function Movie({id, title, image_url}) {
 	return (
 		<li className='list-group-item'>
-			<img src={image_url} alt='' />
+			<div className='image'><img src={image_url} alt='' /></div>
 			<div className='title-author'>
 				<Link to={`/movies/${id}`}>
 					<button className='title-button'>

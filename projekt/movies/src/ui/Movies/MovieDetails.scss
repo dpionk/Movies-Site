@@ -16,13 +16,13 @@
 		  width:100%;
 		  display:flex;
 		  align-items: center;
-		  justify-content: space-between;
 	  .director-actors{
-		  width:50%;
+		width:100%;
 		  display:flex;
 		  flex-direction: row;
-		  justify-content: space-between;
+		  justify-content: space-evenly;
 		  align-items: flex-start;
+		  gap:10px;
 	  .director {
 		  display:flex;
 		  flex-direction: column;
@@ -135,6 +135,27 @@
 @media (max-width: 767px) {
   .movie-detailed {
     .list-group-detailed {
+
+		.persons-container {
+			width:100%;
+		.director-actors{
+			width:100%;
+			display:flex;
+			flex-wrap: wrap;
+		.director {
+			display:flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+  
+			.director-edit {
+				display:flex;
+				flex-direction: row;
+			}
+		}
+	}
+}
+
       .list-group-item {
         border-radius: 20px;
         flex-direction: column;
@@ -144,8 +165,8 @@
         .img-date {
           gap: 5px;
           img {
-            height: 300px;
-            width: 200px;
+            height: 150px;
+            width: 100px;
           }
         }
         .info-buttons {

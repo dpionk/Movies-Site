@@ -4,8 +4,10 @@ import { Formik, Field } from "formik";
 import { getPersonDetails } from '../../ducks/Persons/selectors';
 import { getMovieDetails } from "../../ducks/Movies/selectors";
 import { deleteMovie, editDirector } from "../../ducks/Movies/operations";
+import { deleteMovieActor, createActor } from "../../ducks/Actors/operations";
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
+import { GrAddCircle } from 'react-icons/gr'
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import './MovieDetails.scss'
 import { getActorsFromMovie } from "../../ducks/Actors/selectors";
@@ -24,14 +26,15 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function MovieDetails ({movie, deleteMovie, director, editDirector, actors}) {
+function MovieDetails ({movie, deleteMovie, director, editDirector, actors, deleteMovieActor, createActor}) {
 
 	const history = useNavigate();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [errorDelete, setErrorDelete] = useState(false);	
-	const [editingDirector, setEditDirector] = useState(false)
+	const [editingDirector, setEditDirector] = useState(false);
+	const [addingActor, setAddingActor] = useState(false);
 
 	const handleValidate = (values) => {
 		const errors = {};
@@ -47,20 +50,21 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors}) {
 		setEditDirector(false)
 	}
 
-
-
-
+	async function handleSubmitActor(actor_id) {
+		await createActor(movie,actor_id)
+		setAddingActor(false)
+	}
 	const handleClick = () => {
 		history(-1)
 	}
 
 	async function handleDelete(movie) {
-		await deleteMovie(movie)
+		await deleteMovie(movie, actors)
 		history('/movies/page/1')
 	}
 
 	const actorsToShow = actors.map((actor) => {
-		return <div key={actor.id}> <Link to={`/persons/${actor.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{actor.first_name} {actor.last_name}</Link><button className='btn'><AiFillDelete/></button> </div> 
+		return <div key={actor.id}> <Link to={`/persons/${actor.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{actor.first_name} {actor.last_name}</Link><button className='btn' onClick={() => deleteMovieActor(movie,actor)}><AiFillDelete/></button> </div> 
 	})
 	return (
 		
@@ -136,7 +140,26 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors}) {
 						</div>
 						<div className='actors'>
 							<h4>aktorzy</h4>
+							<button type='button' className='btn' onClick={() => { if (addingActor) { setAddingActor(false)} else { setAddingActor(true)}}}><GrAddCircle/></button>
 							{ actors.length !== 0 ? actorsToShow : <div>Nie ma jeszcze żadnych aktorów</div>}
+							{ addingActor ?  <div>
+							<Formik
+							enableReinitialize={true}
+							initialValues={{id: ''}}
+							validate={handleValidate}
+							onSubmit={handleSubmitActor}
+							>
+							{(formProps) => (
+								<div className='mb-2'>
+									<label className='form-label'>id aktora</label>
+									<Field type='text' className='form-control' name='id' value={formProps.values.id ? formProps.values.id : ''}>
+									</Field>
+									{formProps.touched.id && formProps.errors.id ? <div className="error">{formProps.errors.id}</div> : null}
+									<button type='button' onClick={() => {formProps.handleSubmit(formProps.values.id)}} className='btn' >Zatwierdź</button>
+								</div>
+							)}
+							
+							</Formik></div> : null}
 						</div>
 						</div>
 						</div>
@@ -162,7 +185,9 @@ const mapStateToProps = (state,props) => {
 
 const mapDispatchToProps = {
 	deleteMovie,
-	editDirector
+	editDirector,
+	deleteMovieActor,
+	createActor
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MovieDetails));

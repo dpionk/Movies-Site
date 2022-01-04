@@ -14,6 +14,7 @@ import { getActors } from '../../ducks/Actors/selectors';
 
 function Movies({movies, actors}) {
 
+	console.log(movies)
 
 	const [movieFilterText, setMovieFilterText] = useState(null);
 	const [movieFilterGenre, setMovieFilterGenre] = useState(null);

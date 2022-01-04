@@ -11,9 +11,9 @@ export const movieActorListAction = (actor, movie) => ({
 });
 
 
-export const actorCreateAction = (actor, movie) => ({
+export const actorCreateAction = (actor) => ({
     type: types.ACTOR_ADD,
-    payload: { 'actor' : actor, 'movie': movie}
+    payload: actor
 });
 
 export const actorDeleteAction = (actor, movie) => ({

@@ -24,15 +24,12 @@ function withRouter(Component) {
 
 function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movies}) {
 
-	function handleDelete(person, movies) {
-		 deletePerson(person, movies)
+	function handleDelete(person, moviesDirected, moviesActed) {
+		 deletePerson(person, moviesDirected, moviesActed)
 		 alert('Usunięto')
 		history('/persons/page/1')
 		
 	}
-
-	console.log(person)
-	console.log(moviesDirected)
 
 	const history = useNavigate();
 	const [loading, setLoading] = useState(true);
@@ -71,7 +68,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 									</div>
 								</div>
 								<div className='buttons'>
-									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected)}><AiFillDelete/></button>}
+									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>

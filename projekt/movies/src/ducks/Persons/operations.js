@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as actions from './actions';
 import * as movieActions from '../Movies/actions'
+import * as actorActions from '../Actors/actions'
 
 export const getPersonList = () => {
 	return async dispatch => {
@@ -22,8 +23,8 @@ export const createPerson = (newPerson) => {
     }
 }
 
-export const deletePerson = (personToDelete, movies) => {
-	if (movies.length === 0) {
+export const deletePerson = (personToDelete, moviesWhereDirected, moviesWhereActed) => {
+	if (moviesWhereDirected.length === 0 && moviesWhereActed.length === 0) {
 	return async dispatch => {
             axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`).then(() => {
 				dispatch(actions.personDeleteAction(personToDelete));
@@ -33,14 +34,20 @@ export const deletePerson = (personToDelete, movies) => {
     }
 	}
 	else {
-		let promiseArray = movies.map((movie) => {
+		let promiseArray = moviesWhereDirected.map((movie) => {
 			return (axios.patch(`http://localhost:5000/api/movies/${movie.id}/director`))
 		})
-		promiseArray = [...promiseArray, axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`)]
+		let promiseArray2 = moviesWhereActed.map((movie) => {
+			return (axios.delete(`http://localhost:5000/api/movies/${movie.id}/actors/${personToDelete.id}`))
+		})
+		promiseArray = [...promiseArray, ...promiseArray2, axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`)]
 		return async dispatch => {
 			Promise.all(promiseArray).then(() => {
-				for (let i  in movies) {
-					dispatch(movieActions.movieDeleteAction(i));
+				for (let i  in moviesWhereDirected) {
+					dispatch(movieActions.movieEditDirectorAction(moviesWhereDirected[i], { "id":null }));
+				}
+				for (let i  in moviesWhereActed) {
+					dispatch(actorActions.actorDeleteAction(personToDelete, moviesWhereActed[i]));
 				}
 				dispatch(actions.personDeleteAction(personToDelete));
 			}).catch((error) => {
