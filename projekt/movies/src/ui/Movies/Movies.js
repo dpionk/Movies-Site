@@ -147,7 +147,7 @@ function Movies({movies, actors}) {
 							</div>
 							<div className="displaying">
 							{showSort ? <Sort whatToShow='movies' moviesByActors={moviesByActors} actorMovieActive={actorMovieActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={moviesAlphabetic} byDate={moviesByDate} defaultSort={moviesDefault}/> : null}
-							{showFilter ? <Filter whatToShow='movies' setFilterYear={setMovieFilterYear} setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
+							{showFilter ? <Filter whatToShow='movies' setPersonFilterActor={() => {}} setFilterYear={setMovieFilterYear} setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
 							</div>
 						</div>
 						<div className="list-group">

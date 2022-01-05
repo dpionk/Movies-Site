@@ -8,7 +8,7 @@ export const getPersonList = () => {
             axios.get('http://localhost:5000/api/persons').then((response) => {
 				dispatch(actions.personListAction(response.data));
 			}).catch((error) => {
-				console.log(error)
+				alert('Nie udało się pobrać osób')
 			})
     }
 }
@@ -18,8 +18,8 @@ export const createPerson = (newPerson) => {
             axios.post('http://localhost:5000/api/persons', newPerson).then((response) => {
 				dispatch(actions.personCreateAction(response.data));
 				alert('Dodano')
-			}).catch((error) => {
-				console.log(error)
+			}).catch(() => {
+				alert('Nie udało się dodać osoby')
 			})  
     }
 }

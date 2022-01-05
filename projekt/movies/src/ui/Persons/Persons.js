@@ -12,7 +12,7 @@ import Filter from '../Filter/Filter';
 import './Persons.scss';
 
 function Persons({persons, actors}) {
-
+	const [personFilterActor, setPersonFilterActor] = useState(null);
 	const [personFilterText, setPersonFilterText] = useState(null);
 	const [personFilterNationality, setPersonFilterNationality] = useState(null);
 	const [personSort, setPersonSort] = useState(null);
@@ -56,8 +56,11 @@ function Persons({persons, actors}) {
 		if (personFilterText) {
 			personsToShow = personsToShow.filter(x => {return x.last_name.toLowerCase().indexOf(personFilterText.toLowerCase()) > -1})
 		}
+		if (personFilterActor) {
+			personsToShow = personsToShow.filter(x => {return actors.filter((actor) => actor[0] === x.id).length !== 0})
+		}
 		setShownPersons(personsToShow);
-	}, [personSort, persons, personFilterNationality, personFilterText, actors])
+	}, [personSort, persons, personFilterNationality, personFilterText, actors, personFilterActor])
 
 	const personsAlphabetic = () => {
 		setPersonSort(() => (a, b) => {
@@ -101,6 +104,7 @@ function Persons({persons, actors}) {
 	const handleFilterReset = () => {
 		setPersonFilterText(null);
 		setPersonFilterNationality(null);
+		setPersonFilterActor(null);
 	}
 
 	const personList = currentPersons.map((person) => {
@@ -133,6 +137,7 @@ function Persons({persons, actors}) {
 
 	return (
 		<div>
+			
 				<div className="persons-container">
 					<div className="persons">
 						<div className="sort">
@@ -142,11 +147,11 @@ function Persons({persons, actors}) {
 							</div>
 							<div className="displaying">
 							{showSort ? <Sort whatToShow='persons' personsByActors={personsByActors} actorActive={actorActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={personsAlphabetic} byDate={personsByDate} defaultSort={personsDefault}/> : null}
-							{showFilter ? <Filter setFilterText={setPersonFilterText} setFilterGenre={setPersonFilterNationality} handleFilterReset={handleFilterReset}/> : null}
+							{showFilter ? <Filter setPersonFilterActor={setPersonFilterActor} setFilterYear={() => {}} setFilterText={setPersonFilterText} setFilterGenre={setPersonFilterNationality} handleFilterReset={handleFilterReset}/> : null}
 							</div>
 						</div>
 						<div className="list-group">
-							{personList && personList}
+							{personList.length !== 0 ? personList : 'Brak osób'}
 						</div>
 					</div>
 					<div className="pagination-container">

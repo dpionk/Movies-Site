@@ -7,19 +7,14 @@ export const getMovieList = () => {
 		axios.get('http://localhost:5000/api/movies').then((response)=> {
 			dispatch(actions.movieListAction(response.data));
 		}).catch((error) => {
-			console.log(error)
+			alert('Nie udało się pobrać filmów')
 		})
     }
 }
 
 export const createMovie = (newMovie) => {
 	return async dispatch => {
-
-		 const movieToAdd = {
-			...newMovie,
-			director: {"id" : newMovie.director_id }
-		}
-            axios.post('http://localhost:5000/api/movies', movieToAdd).then((response) => {
+            axios.post('http://localhost:5000/api/movies', newMovie).then((response) => {
 				dispatch(actions.movieCreateAction(response.data));
 				alert('Dodano!')
 			}).catch((error) => {
@@ -28,6 +23,9 @@ export const createMovie = (newMovie) => {
 				}
 				if (error.response.data === 'DIRECTOR_NOT_EXISTS') {
 					alert('Nie ma takiej osoby!')
+				}
+				else {
+					alert('Nie udało się dodać filmu')
 				}
 			})
     }
@@ -63,19 +61,9 @@ export const deleteMovie = (movieToDelete, actors) => {
 
 export const editMovie = (modifiedMovie) => {
 	
-	const modifiedMovie2 = {
-		...modifiedMovie,
-		director: {"id" : modifiedMovie.director_id}
-	}
-
-	if (!modifiedMovie.director_id) {
-		modifiedMovie2.director = undefined
-	}
-	console.log(modifiedMovie)
-	console.log(modifiedMovie2)
 	return async dispatch => {
 		console.log(modifiedMovie)
-            axios.put(`http://localhost:5000/api/movies/${modifiedMovie.id}`, modifiedMovie2).then(() => {
+            axios.put(`http://localhost:5000/api/movies/${modifiedMovie.id}`, modifiedMovie).then(() => {
 					dispatch(actions.movieEditAction(modifiedMovie))
 					alert("Edycja przebiegła pomyślnie");
 			}).catch((error) => {

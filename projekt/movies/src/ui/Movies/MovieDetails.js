@@ -42,6 +42,10 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 		if (!values.id) {
 			errors.id = "Proszę podać id"
 		}
+
+		if (isNaN(Number(values.id)) || (values.id !== "" && isNaN(parseInt(values.id)))) {
+			errors.id = "Podano złe id"
+		}
 		return errors;
 	}
 
@@ -69,7 +73,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 	return (
 		
 		<div>
-			{movie && director && actors &&
+			{movie && director && actors ?
 				<div className="movie-detailed">
 					<div className="list-group-detailed" key={movie.id}>
 						<div className="list-group-item">
@@ -165,7 +169,8 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 						</div>
 						</div>
 					</div>
-				</div>
+				</div> : 
+				<div>Nie ma takiego filmu</div>
 				}
 		</div>
 	)

@@ -30,6 +30,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 		
 	}
 
+
 	const history = useNavigate();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(false);
@@ -43,7 +44,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 	return (
 		
 		<div>
-			{person  && moviesDirected &&
+			{person  && moviesDirected ?
 				<div className='person-detailed'>
 					<div className='list-group-detailed' key={person.id}>
 						<div className='list-group-item'>
@@ -92,7 +93,8 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 							
 						</div>
 					</div>
-				</div>
+				</div> : 
+				<div> Nie ma takiej osoby </div>
 				}
 		</div>
 	)

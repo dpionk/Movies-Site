@@ -6,7 +6,7 @@ export const getActorList = () => {
 		axios.get('http://localhost:5000/api/actors').then((response)=> {
 			dispatch(actions.actorListAction(response.data));
 		}).catch((error) => {
-			console.log(error)
+			alert('Nie udało się pobrać aktorów')
 		})
     }
 }

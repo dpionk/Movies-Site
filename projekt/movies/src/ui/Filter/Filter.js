@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import './Filter.scss'
 
-function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFilterGenre, handleFilterReset, setFilterYear }) {
+function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFilterGenre, handleFilterReset, setFilterYear, setPersonFilterActor }) {
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
+	const [checkboxClicked, setCheckboxClicked] = useState(false);
 
 	const handleClick = () => {
 		if (dropdownClicked) {
@@ -61,19 +62,38 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 				{ whatToShow === 'movies' ? <div className="star-filter">
 						
 						<label className="form-check-label" >
-							tegoroczne
+							zeszłoroczne
 						</label>
 						<input className="form-check-input" type="checkbox" value="year" id="flexCheckDefault" onClick={() => {
-				setFilterYear(2022);
-				setFilterText(null);
-				setFilterGenre(null);
+							if (checkboxClicked) {
+								setCheckboxClicked(false)
+								setFilterYear(null);
+								}
+								else {
+									setCheckboxClicked(true)
+									setFilterYear(2021);
+									setFilterText(null);
+									setFilterGenre(null);
+								}
+
 			}} />
 					</div> : <div className="star-filter">
 						
 						<label className="form-check-label" >
-							coś
+							tylko aktorzy
 						</label>
-						<input className="form-check-input" type="checkbox" value="2022" id="flexCheckDefault" onClick={() => { }} />
+						<input className="form-check-input" type="checkbox" value="2022" id="flexCheckDefault" onClick={() => {
+							if (checkboxClicked) {
+							setCheckboxClicked(false)
+							setPersonFilterActor(false);
+							}
+							else {
+								setCheckboxClicked(true)
+								setFilterText(null);
+							setFilterGenre(null);
+							setPersonFilterActor(true);
+							}
+						}}  />
 					</div>}
 
 				</div>
