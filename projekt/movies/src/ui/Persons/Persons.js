@@ -11,7 +11,7 @@ import Sort from '../Sort/Sort';
 import Filter from '../Filter/Filter';
 import './Persons.scss';
 
-function Persons({persons, actors}) {
+function Persons({persons, actors, loading}) {
 	const [personFilterActor, setPersonFilterActor] = useState(null);
 	const [personFilterText, setPersonFilterText] = useState(null);
 	const [personFilterNationality, setPersonFilterNationality] = useState(null);
@@ -137,7 +137,7 @@ function Persons({persons, actors}) {
 
 	return (
 		<div>
-			
+			{loading ? <div>Ładowanie...</div> :
 				<div className="persons-container">
 					<div className="persons">
 						<div className="sort">
@@ -158,6 +158,7 @@ function Persons({persons, actors}) {
 					<Pagination whatToShow='persons' data={shownPersons} elementsPerPage={personsPerPage} />
 					</div>
 				</div>
+}
 		</div>
 	)
 }

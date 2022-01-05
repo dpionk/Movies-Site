@@ -22,7 +22,7 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movies}) {
+function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movies, loading}) {
 
 	function handleDelete(person, moviesDirected, moviesActed) {
 		 deletePerson(person, moviesDirected, moviesActed)
@@ -32,8 +32,6 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 
 
 	const history = useNavigate();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [errorDelete, setErrorDelete] = useState(false);
 
@@ -44,7 +42,9 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 	return (
 		
 		<div>
-			{person  && moviesDirected ?
+			{!loading && !person && "Nie ma takiej osoby"}
+			{loading && "Ładowanie..."}
+			{person  && moviesDirected &&
 				<div className='person-detailed'>
 					<div className='list-group-detailed' key={person.id}>
 						<div className='list-group-item'>
@@ -68,11 +68,11 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 									</div>
 								</div>
 								<div className='buttons'>
-									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>}
+									{/* {!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>} */}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
-									{deleting && !error && <button className='btn' disabled>Usuwanie...</button>}
+									{/* {deleting && !error && <button className='btn' disabled>Usuwanie...</button>} */}
 									{errorDelete && <button className='btn' disabled>Coś poszło nie tak....</button>}
 								</div>
 							</div>
@@ -93,8 +93,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 							
 						</div>
 					</div>
-				</div> : 
-				<div> Nie ma takiej osoby </div>
+				</div> 
 				}
 		</div>
 	)

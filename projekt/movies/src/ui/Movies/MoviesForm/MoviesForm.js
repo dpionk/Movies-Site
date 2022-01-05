@@ -22,13 +22,16 @@ function withRouter(Component) {
   }
 
 
-function MoviesForm({createMovie, editMovie, movie}) {
+function MoviesForm({createMovie, editMovie, movie, loading}) {
 
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
-	const [loading, setLoading] = useState(false);
+
+
+	console.log(pending)
+	console.log(error)
 
 	const history = useNavigate();
 	function handleClick() {
@@ -85,19 +88,19 @@ function MoviesForm({createMovie, editMovie, movie}) {
 			values.director_id = parseInt(values.director_id)
 		}
 	console.log(values)
-	editMovie(values)
+	editMovie(values, setPending, setError, history)
 		
 	}
 
 	const handleSubmitAdd = (values) => {
+		
 		if (values.director_id === "") {
 			values.director_id = null
 		}
 		else {
 			values.director_id = parseInt(values.director_id)
 		}
-		console.log(values)
-		createMovie(values)
+		createMovie(values, setPending, setError, history)
 		}
 
 	

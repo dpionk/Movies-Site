@@ -21,15 +21,13 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function PersonsForm({createPerson, editPerson, person}) {
+function PersonsForm({createPerson, editPerson, person, loading}) {
 
 
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
-	const [loading, setLoading] = useState(false);
-	const [bookError, setBookError] = useState(false);
 
 	const history = useNavigate();
 	function handleClick() {
@@ -71,13 +69,13 @@ function PersonsForm({createPerson, editPerson, person}) {
 
 	
 	const handleSubmitEdit = (values) => {
-		editPerson(values)
-		history('/persons/page/1');
+		editPerson(values, setPending, setError)
+		// history('/persons/page/1');
 	}
 
 	const handleSubmitAdd = (values) => {
-		createPerson(values)
-		history('/persons/page/1');
+		createPerson(values, setPending, setError)
+		// history('/persons/page/1');
 		}
 
 	
@@ -107,7 +105,6 @@ function PersonsForm({createPerson, editPerson, person}) {
 			{ (formProps) => (
 				<div className="row justify-content-md-center">
 					<div className='container-add col'>
-						{bookError && <div> Nie udało się załadować danych</div>}
 						{loading && <div>Ładowanie...</div>}
 						<div className='button-back'>
 							<button className='btn btn-primary' type='button' onClick={handleClick}><RiArrowGoBackLine /></button>

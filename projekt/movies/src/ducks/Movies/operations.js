@@ -2,32 +2,40 @@ import axios from 'axios';
 import * as actions from './actions';
 import * as actorActions from '../Actors/actions'
 
-export const getMovieList = () => {
+export const getMovieList = (setLoading) => {
 	return async dispatch => {
+		setLoading(true);
 		axios.get('http://localhost:5000/api/movies').then((response)=> {
 			dispatch(actions.movieListAction(response.data));
-		}).catch((error) => {
+		}).catch(() => {
+			setLoading(false);
 			alert('Nie udało się pobrać filmów')
+		}).finally(() => {
+			setLoading(false);
 		})
     }
 }
 
-export const createMovie = (newMovie) => {
+export const createMovie = (newMovie, setPending, setError, history) => {
 	return async dispatch => {
+		setPending(true)
             axios.post('http://localhost:5000/api/movies', newMovie).then((response) => {
 				dispatch(actions.movieCreateAction(response.data));
 				alert('Dodano!')
+				history('/movies/page/1')
 			}).catch((error) => {
+				setError(true);
+				if (!error.response) return alert("Brak połączenia z bazą danych")
 				if (error.response.data === 'TITLE_DUPLICATE') {
 					alert('Zduplikowany tytuł!')
 				}
 				if (error.response.data === 'DIRECTOR_NOT_EXISTS') {
 					alert('Nie ma takiej osoby!')
 				}
-				else {
-					alert('Nie udało się dodać filmu')
-				}
-			})
+
+			}).finally(
+				()=>{setPending(false)}
+			)
     }
 }
 
@@ -59,25 +67,28 @@ export const deleteMovie = (movieToDelete, actors) => {
     }
 }
 
-export const editMovie = (modifiedMovie) => {
+export const editMovie = (modifiedMovie, setPending, setError,history) => {
 	
 	return async dispatch => {
-		console.log(modifiedMovie)
+		setPending(true);
             axios.put(`http://localhost:5000/api/movies/${modifiedMovie.id}`, modifiedMovie).then(() => {
 					dispatch(actions.movieEditAction(modifiedMovie))
 					alert("Edycja przebiegła pomyślnie");
+					history(`/movies/${modifiedMovie.id}`)
 			}).catch((error) => {
+				setError(true);
+				if (!error.response) return alert("Brak połączenia z bazą danych")
 				if (error.response.data === 'DIRECTOR_NOT_EXISTS') {
 					alert('Nie ma takiej osoby!')
 				}
-				console.log(error)
-			})
+			}).finally(
+				()=>{setPending(false)}
+			)
                 
     }
 }
 
 export const editDirector = (movie, director_id) => {
-	console.log(director_id)
 	return async dispatch => {
 		axios.patch(`http://localhost:5000/api/movies/${movie.id}/director`, director_id).then(() => {
 			dispatch(actions.movieEditDirectorAction(movie,director_id))

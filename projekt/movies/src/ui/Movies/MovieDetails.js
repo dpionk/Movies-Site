@@ -26,11 +26,9 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function MovieDetails ({movie, deleteMovie, director, editDirector, actors, deleteMovieActor, createActor}) {
+function MovieDetails ({movie, deleteMovie, director, editDirector, actors, deleteMovieActor, createActor, loading}) {
 
 	const history = useNavigate();
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
 	const [deleting, setDeleting] = useState(false);
 	const [errorDelete, setErrorDelete] = useState(false);	
 	const [editingDirector, setEditDirector] = useState(false);
@@ -73,7 +71,9 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 	return (
 		
 		<div>
-			{movie && director && actors ?
+			{!loading && !movie && "Nie ma takiego filmu"}
+			{loading && "Ładowanie..."}
+			{movie && director && actors &&
 				<div className="movie-detailed">
 					<div className="list-group-detailed" key={movie.id}>
 						<div className="list-group-item">
@@ -103,11 +103,11 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 									</div>
 								</div>
 								<div className="buttons">
-									{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}
+									{/* {!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>} */}
 									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
-									{deleting && !error && <button className='btn' disabled>Usuwanie...</button>}
+									{/* {deleting && !error && <button className='btn' disabled>Usuwanie...</button>} */}
 									{errorDelete && <button className='btn' disabled>Coś poszło nie tak....</button>}
 								</div>
 							</div>
@@ -169,8 +169,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 						</div>
 						</div>
 					</div>
-				</div> : 
-				<div>Nie ma takiego filmu</div>
+				</div>
 				}
 		</div>
 	)

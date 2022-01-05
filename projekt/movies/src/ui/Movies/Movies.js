@@ -12,9 +12,8 @@ import Pagination from '../Pagination/Pagination'
 import './Movies.scss';
 import { getActors } from '../../ducks/Actors/selectors';
 
-function Movies({movies, actors}) {
+function Movies({movies, actors, loading}) {
 
-	console.log(movies)
 
 	const [movieFilterYear, setMovieFilterYear] = useState(null)
 	const [movieFilterText, setMovieFilterText] = useState(null);
@@ -137,7 +136,7 @@ function Movies({movies, actors}) {
 	})
 
 	return (
-		<div>
+		<div>	{loading ? <div>Ładowanie...</div> :
 				<div className="movies-container">
 					<div className="movies">
 						<div className="sort">
@@ -158,6 +157,7 @@ function Movies({movies, actors}) {
 					<Pagination whatToShow='movies' data={shownMovies} elementsPerPage={moviesPerPage} />
 					</div>
 				</div>
+}
 		</div>
 	)
 }

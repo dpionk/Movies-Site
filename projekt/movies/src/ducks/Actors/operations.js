@@ -2,10 +2,11 @@ import axios from 'axios';
 import * as actions from './actions';
 
 export const getActorList = () => {
+	
 	return async dispatch => {
 		axios.get('http://localhost:5000/api/actors').then((response)=> {
 			dispatch(actions.actorListAction(response.data));
-		}).catch((error) => {
+		}).catch(() => {
 			alert('Nie udało się pobrać aktorów')
 		})
     }
