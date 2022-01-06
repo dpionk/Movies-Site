@@ -296,8 +296,8 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 		<div>
 			{movies && nationalities &&
 		<div className="list-group">
-			<div className='list-group-item'>
-					<div className='newMovies'>
+			{ movies.length >= 3 ?<div className='list-group-item'>
+					 <div className='newMovies'>
 						<h4>Najnowsze filmy</h4>
 						<div className='movies'>
 					{ movies.length >= 3 ? movies.sort((a,b) => (a.release_date < b.release_date) ? 1 : ((b.release_date < a.release_date) ? -1 : 0)).slice(0,3).map((movie) => {
@@ -308,7 +308,9 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 					}) : null}
 					</div>
 					</div>
+					
 			</div>
+			: null }
 			<div className='list-group-item'>
 				<div className='charts'>
 					<div className='chart'>
