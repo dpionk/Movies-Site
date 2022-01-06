@@ -103,11 +103,12 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 									</div>
 								</div>
 								<div className="buttons">
-									{/* {!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>} */}
+									{/*{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}*/}
+									{!deleting && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}
 									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
-									{/* {deleting && !error && <button className='btn' disabled>Usuwanie...</button>} */}
+									{/*{deleting && !error && <button className='btn' disabled>Usuwanie...</button>}*/}
 									{errorDelete && <button className='btn' disabled>Coś poszło nie tak....</button>}
 								</div>
 							</div>
@@ -145,7 +146,8 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 						<div className='actors'>
 							<h4>aktorzy</h4>
 							<button type='button' className='btn' onClick={() => { if (addingActor) { setAddingActor(false)} else { setAddingActor(true)}}}><GrAddCircle/></button>
-							{ actors.length !== 0 ? actorsToShow : <div>Nie ma jeszcze żadnych aktorów</div>}
+							{ actors.length !== 0 && !addingActor && actorsToShow}
+							{ actors.length === 0 && !addingActor &&<div>Nie ma jeszcze żadnych aktorów</div>}
 							{ addingActor ?  <div>
 							<Formik
 							enableReinitialize={true}

@@ -117,7 +117,7 @@ function MoviesForm({createMovie, editMovie, movie, loading}) {
 						release_date: movie.release_date.slice(0, 10),
 						description: movie.description,
 						image_url: movie.image_url,
-						director_id: movie.director_id ? movie.director_id : null
+						director_id: movie.director_id ? movie.director_id : ''
 					}
 					:
 					{

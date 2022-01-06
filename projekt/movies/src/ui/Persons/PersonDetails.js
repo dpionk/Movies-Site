@@ -69,6 +69,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 								</div>
 								<div className='buttons'>
 									{/* {!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>} */}
+									{!deleting && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
