@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getMovies } from '../../ducks/Movies/selectors'
+import { getMoviesError, getMoviesLoading, getMovies } from '../../ducks/Movies/selectors'
 import { AiFillFilter } from 'react-icons/ai';
 import { BiSort } from 'react-icons/bi';
 import Movie from './Movie'
@@ -12,7 +12,7 @@ import Pagination from '../Pagination/Pagination'
 import './Movies.scss';
 import { getActors } from '../../ducks/Actors/selectors';
 
-function Movies({movies, actors, loading}) {
+function Movies({movies, actors, loading, error}) {
 
 
 	const [movieFilterYear, setMovieFilterYear] = useState(null)
@@ -136,8 +136,9 @@ function Movies({movies, actors, loading}) {
 	})
 
 	return (
-		<div>	{loading ? <div>Ładowanie...</div> :
-				<div className="movies-container">
+		<div>	{loading && !error && <div>Ładowanie...</div>}
+			
+				{!loading && !error && movieList ? <div className="movies-container">
 					<div className="movies">
 						<div className="sort">
 							<div className="buttons">
@@ -150,14 +151,15 @@ function Movies({movies, actors, loading}) {
 							</div>
 						</div>
 						<div className="list-group">
-							{movieList.length !== 0 ? movieList : 'Brak filmów'}
+							{movieList}
 						</div>
 					</div>
 					<div className="pagination-container">
 					<Pagination whatToShow='movies' data={shownMovies} elementsPerPage={moviesPerPage} />
 					</div>
-				</div>
+				</div> : null
 }
+	{ error && <div>Brak połączenia z bazą danych</div>}
 		</div>
 	)
 }
@@ -181,7 +183,9 @@ const mapStateToProps = (state) => {
 		return prev
 	}, [] ).sort((a, b) => {
 		return (a[1] < b[1]) ? 1 : -1
-	})
+	}),
+	loading: getMoviesLoading(state),
+	error: getMoviesError(state)
 	};
 }
 

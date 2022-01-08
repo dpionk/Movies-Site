@@ -18,12 +18,10 @@ import './App.scss'
 
 function App({getMovieList, getPersonList, getActorList}) {
 
-	const [loadingMovies, setLoadingMovies] = useState(false);
-	const [loadingPersons, setLoadingPersons] = useState(false)
 	
 	useEffect(() => {
-        getMovieList(setLoadingMovies);
-		getPersonList(setLoadingPersons);
+        getMovieList();
+		getPersonList();
 		getActorList();
     }, [getMovieList, getPersonList, getActorList]);
 
@@ -34,14 +32,14 @@ function App({getMovieList, getPersonList, getActorList}) {
 		<div className='container'>
 			<Routes>
 				<Route exact path='/' element={<Main/>}/>
-				<Route exact path='/movies/page/:id' element={<Movies loading={loadingMovies}/>}/>
-				<Route exact path='/movies/:id' element={<MovieDetails loading={loadingMovies}/>}/>
+				<Route exact path='/movies/page/:id' element={<Movies/>}/>
+				<Route exact path='/movies/:id' element={<MovieDetails/>}/>
 				<Route exact path='/movies/add' element={<MoviesForm />}/>
-				<Route exact path='/movies/edit/:id' element={<MoviesForm loading={loadingMovies}/>}/>
-				<Route exact path='/persons/page/:id' element={<Persons loading={loadingPersons}/>}/>
-				<Route exact path='/persons/:id' element={<PersonDetails loading={loadingPersons}/>}/>
+				<Route exact path='/movies/edit/:id' element={<MoviesForm/>}/>
+				<Route exact path='/persons/page/:id' element={<Persons/>}/>
+				<Route exact path='/persons/:id' element={<PersonDetails/>}/>
 				<Route exact path='/persons/add' element={<PersonsForm/>}/>
-				<Route exact path='/persons/edit/:id' element={<PersonsForm loading={loadingPersons}/>}/>
+				<Route exact path='/persons/edit/:id' element={<PersonsForm/>}/>
 				<Route path='*' element={<PageNotFound/>}/>
 			</Routes>
 		</div>

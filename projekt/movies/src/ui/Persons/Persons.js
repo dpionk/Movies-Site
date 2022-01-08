@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPersons } from '../../ducks/Persons/selectors'
+import { getPersonsError, getPersonsLoading, getPersons } from '../../ducks/Persons/selectors'
 import { getActors } from '../../ducks/Actors/selectors'
 import Person from './Person'
 import { AiFillFilter } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import Sort from '../Sort/Sort';
 import Filter from '../Filter/Filter';
 import './Persons.scss';
 
-function Persons({persons, actors, loading}) {
+function Persons({persons, actors, loading, error}) {
 	const [personFilterActor, setPersonFilterActor] = useState(null);
 	const [personFilterText, setPersonFilterText] = useState(null);
 	const [personFilterNationality, setPersonFilterNationality] = useState(null);
@@ -30,6 +30,7 @@ function Persons({persons, actors, loading}) {
 	const indexOfFirstPerson = Number(id - 1) * personsPerPage;
 	const currentPersons = shownPersons.slice(indexOfFirstPerson, indexOfLastPerson)
 
+	
 	useEffect(() => {
 		let personsToShow = persons.map((person) => {
 			for (let i=0;i<actors.length;i++) {
@@ -137,7 +138,8 @@ function Persons({persons, actors, loading}) {
 
 	return (
 		<div>
-			{loading ? <div>Ładowanie...</div> :
+			{loading && !error && <div>Ładowanie...</div>}
+			{!loading && !error && personList ?
 				<div className="persons-container">
 					<div className="persons">
 						<div className="sort">
@@ -151,14 +153,15 @@ function Persons({persons, actors, loading}) {
 							</div>
 						</div>
 						<div className="list-group">
-							{personList.length !== 0 ? personList : 'Brak osób'}
+							{personList}
 						</div>
 					</div>
 					<div className="pagination-container">
 					<Pagination whatToShow='persons' data={shownPersons} elementsPerPage={personsPerPage} />
 					</div>
-				</div>
+				</div> : null
 }
+{ error && <div>Brak połączenia z bazą danych</div>}
 		</div>
 	)
 }
@@ -182,7 +185,9 @@ const mapStateToProps = (state) => {
 		return prev
 	}, [] ).sort((a, b) => {
 		return (a[1] < b[1]) ? 1 : -1
-	})
+	}),
+	loading: getPersonsLoading(state),
+	error: getPersonsError(state)
 	};
 }
 

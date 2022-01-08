@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getNationalities } from '../../ducks/Persons/selectors';
-import { getGenres } from '../../ducks/Movies/selectors';
+import { getGenres, getMovies } from '../../ducks/Movies/selectors';
 import { getActors } from '../../ducks/Actors/selectors';
 import { Bar } from 'react-chartjs-2'
 import './Main.scss';
@@ -11,6 +11,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Chart }            from 'react-chartjs-2'
 
 function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
+	
 
 	const [nationalityData, setNationalityData] = useState({
 		labels:  nationalities.map((nationality) => {
@@ -291,7 +292,6 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 		})
 	},[nationalities, genres, actors, persons, actorsMovies, movies])
 
-	console.log(moviesData)
 	return (
 		<div>
 			{movies && nationalities &&
@@ -311,6 +311,7 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 					
 			</div>
 			: null }
+			
 			<div className='list-group-item'>
 				<div className='charts'>
 					<div className='chart'>
@@ -377,12 +378,13 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 }
 
 const mapStateToProps = (state) => {
+	const movies=getMovies(state)
     return {
-        movies: state.movies,
+        movies: movies,
 		nationalities: getNationalities(state),
-		genres: getGenres(state),
-		persons: state.persons,
-		actors: state.actors.reduce((prev,curr) => {
+		genres: movies ? getGenres(state) : [],
+		persons: state.persons.items,
+		actors: state.actors.items.reduce((prev,curr) => {
 			let key = curr['person_id']
 			if (!prev.find((element) => element[0] === key)) {
 				prev = [...prev, [key, 1]]
@@ -399,7 +401,7 @@ const mapStateToProps = (state) => {
 	}, [] ).sort((a, b) => {
 		return (a[1] < b[1]) ? 1 : -1
 	}),
-	actorsMovies: state.actors.reduce((prev,curr) => {
+	actorsMovies: getActors(state).reduce((prev,curr) => {
 		let key = curr['movie_id']
 		if (!prev.find((element) => element[0] === key)) {
 			prev = [...prev, [key, 1]]

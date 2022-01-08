@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { connect } from 'react-redux';
 import { Formik, Field } from "formik";
-import { getPersonDetails } from '../../ducks/Persons/selectors';
-import { getMovieDetails } from "../../ducks/Movies/selectors";
-import { deleteMovie, editDirector } from "../../ducks/Movies/operations";
+import { getPersonDetails, getPersons } from '../../ducks/Persons/selectors';
+import { getMovieDetails, getMoviesError, getMoviesLoading } from "../../ducks/Movies/selectors";
+import { deleteMovie, editDirector, deleteDirector } from "../../ducks/Movies/operations";
 import { deleteMovieActor, createActor } from "../../ducks/Actors/operations";
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
@@ -26,54 +26,68 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function MovieDetails ({movie, deleteMovie, director, editDirector, actors, deleteMovieActor, createActor, loading}) {
+function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirector, actors, deleteMovieActor, createActor, loading, persons, error}) {
 
+	
 	const history = useNavigate();
-	const [deleting, setDeleting] = useState(false);
-	const [errorDelete, setErrorDelete] = useState(false);	
 	const [editingDirector, setEditDirector] = useState(false);
 	const [addingActor, setAddingActor] = useState(false);
+	const [confirmDelete, setConfirmDelete] = useState(false)
 
-	const handleValidate = (values) => {
-		const errors = {};
-
-		if (!values.id) {
-			errors.id = "Proszę podać id"
-		}
-
-		if (isNaN(Number(values.id)) || (values.id !== "" && isNaN(parseInt(values.id)))) {
-			errors.id = "Podano złe id"
-		}
-		return errors;
-	}
-
-	async function handleSubmitDirector(director_id) {
-		await editDirector(movie, director_id)
+	function handleSubmitDirector(director_id) {
+		 editDirector(movie, director_id)
 		setEditDirector(false)
 	}
 
-	async function handleSubmitActor(actor_id) {
-		await createActor(movie,actor_id)
+	 function handleSubmitActor(actor_id) {
+		 createActor(movie,actor_id)
 		setAddingActor(false)
 	}
 	const handleClick = () => {
 		history(-1)
 	}
 
-	async function handleDelete(movie) {
-		await deleteMovie(movie, actors)
+	 function handleDelete(movie) {
+		 deleteMovie(movie, actors)
+		 if (!loading && !error ) {
 		history('/movies/page/1')
+		 }
+	}
+
+	const handleValidate = (values) => { 
+		const errors = {};
+
+		if (values.id === '') {
+			errors.id = 'Nie ma więcej aktorów do dodania'
+		}
+
+		return errors
 	}
 
 	const actorsToShow = actors.map((actor) => {
 		return <div key={actor.id}> <Link to={`/persons/${actor.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{actor.first_name} {actor.last_name}</Link><button className='btn' onClick={() => deleteMovieActor(movie,actor)}><AiFillDelete/></button> </div> 
+	}) 
+
+
+	const personsToChooseFromDirector = persons.filter((person) => person.id !== director.id).map((person) => {
+		return (
+				<option key={person.id} value={JSON.stringify(person.id)}>{person.first_name} {person.last_name}</option>
+		)
 	})
+
+	const personsToChooseFromActor = persons.filter((person) => !actors.find((actor) => actor.id === person.id)).map((person) => {
+		return (
+				<option key={person.id} value={JSON.stringify(person.id)}>{person.first_name} {person.last_name}</option>
+		)
+	})
+
+
 	return (
 		
 		<div>
 			{!loading && !movie && "Nie ma takiego filmu"}
 			{loading && "Ładowanie..."}
-			{movie && director && actors &&
+			{movie && director && actors && persons &&
 				<div className="movie-detailed">
 					<div className="list-group-detailed" key={movie.id}>
 						<div className="list-group-item">
@@ -103,13 +117,13 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 									</div>
 								</div>
 								<div className="buttons">
-									{/*{!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}*/}
-									{!deleting && <button type='button' className='btn' onClick={() => handleDelete(movie)}><AiFillDelete/></button>}
+									{!loading && !confirmDelete && <button type='button' className='btn' onClick={() => {if (confirmDelete) {setConfirmDelete(false)} else { setConfirmDelete(true)}}}><AiFillDelete/></button>}
+									{ confirmDelete && <div>Na pewno?<button type='button' className='btn' onClick={handleDelete} >Tak</button><button onClick={() => setConfirmDelete(false)}type='button' className='btn'>Cofnij</button></div>}
 									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
-									{/*{deleting && !error && <button className='btn' disabled>Usuwanie...</button>}*/}
-									{errorDelete && <button className='btn' disabled>Coś poszło nie tak....</button>}
+									{loading && !error && <button className='btn' disabled>Usuwanie...</button>}
+									{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
 								</div>
 							</div>
 						</div>
@@ -122,21 +136,20 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 							<button type='button' className='btn' onClick={() => { if (editingDirector) { 
 								setEditDirector(false)} else {setEditDirector(true)}}}><AiFillEdit/></button>
 							</div>
-							{director.hasOwnProperty('id') && !editingDirector && <div className='nav-item'><Link to={`/persons/${director.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{director.first_name} {director.last_name}</Link></div>}
+							{director.hasOwnProperty('id') && !editingDirector && <div className='nav-item'><Link to={`/persons/${director.id}` } style={{ textDecoration: 'none', color: 'gray'}}>{director.first_name} {director.last_name}</Link><button className='btn' onClick={() => deleteDirector(movie)}><AiFillDelete/></button> </div>}
 							{!director.hasOwnProperty('id') && !editingDirector && <div>Nie wybrano reżysera</div>}
 							{editingDirector ? <div>
 							<Formik
 							enableReinitialize={true}
-							initialValues={{id: movie.director_id ? movie.director_id : ''}}
-							validate={handleValidate}
+							initialValues={{id: movie.director_id ? movie.director_id : (persons.length > 0 ? persons[0].id : '') }}
 							onSubmit={handleSubmitDirector}
 							>
 							{(formProps) => (
 								<div className='mb-2'>
-									<label className='form-label'>id nowego reżysera</label>
-									<Field type='text' className='form-control' name='id' value={formProps.values.id ? formProps.values.id : ''}>
-									</Field>
-									{formProps.touched.id && formProps.errors.id ? <div className="error">{formProps.errors.id}</div> : null}
+										<Field as='select' name='id' className="form-select" aria-label="size 4 select">
+											{ movie && movie.director_id && <option value>{ `${director.first_name} ${director.last_name}`}</option>}
+											{personsToChooseFromDirector ? personsToChooseFromDirector : null }
+										</Field>
 									<button type='button' onClick={() => {formProps.handleSubmit(formProps.values.id)}} className='btn' >Zatwierdź</button>
 								</div>
 							)}
@@ -150,18 +163,20 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 							{ actors.length === 0 && !addingActor &&<div>Nie ma jeszcze żadnych aktorów</div>}
 							{ addingActor ?  <div>
 							<Formik
+							
 							enableReinitialize={true}
-							initialValues={{id: ''}}
-							validate={handleValidate}
+							initialValues={{id: personsToChooseFromActor.length > 0 ? personsToChooseFromActor[0].key : ''} }
 							onSubmit={handleSubmitActor}
+							validate={handleValidate}
 							>
 							{(formProps) => (
 								<div className='mb-2'>
-									<label className='form-label'>id aktora</label>
-									<Field type='text' className='form-control' name='id' value={formProps.values.id ? formProps.values.id : ''}>
-									</Field>
+									<Field as='select' name='id' className="form-select" aria-label="size 4 select">
+											{personsToChooseFromActor ? personsToChooseFromActor : null }
+										</Field>
 									{formProps.touched.id && formProps.errors.id ? <div className="error">{formProps.errors.id}</div> : null}
 									<button type='button' onClick={() => {formProps.handleSubmit(formProps.values.id)}} className='btn' >Zatwierdź</button>
+									
 								</div>
 							)}
 							
@@ -179,19 +194,24 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, actors, dele
 
 const mapStateToProps = (state,props) => {
 	const movie = getMovieDetails(state,props.router.params.id)
+	const persons = movie ? getPersons(state) : []
 	const director = movie ? getPersonDetails(state,movie.director_id) : {}
 	return {
 		movie: movie,
 		director: director,
-		actors: movie ? getActorsFromMovie(state, movie.id).map((element) => {
+		persons: persons,
+		actors: persons && movie ? getActorsFromMovie(state, movie.id).map((element) => {
 			return getPersonDetails(state, element.person_id)
-		}) : []
+		}) : [],
+		loading: getMoviesLoading(state),
+		error: getMoviesError(state)
 	}
 }
 
 const mapDispatchToProps = {
 	deleteMovie,
 	editDirector,
+	deleteDirector,
 	deleteMovieActor,
 	createActor
 }

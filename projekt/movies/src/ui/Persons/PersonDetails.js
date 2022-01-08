@@ -34,6 +34,7 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 	const history = useNavigate();
 	const [deleting, setDeleting] = useState(false);
 	const [errorDelete, setErrorDelete] = useState(false);
+	const [confirmDelete, setConfirmDelete] = useState(false)
 
 	const handleClick = () => {
 		history(-1)
@@ -68,8 +69,10 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 									</div>
 								</div>
 								<div className='buttons'>
+								{!deleting && !confirmDelete && <button type='button' className='btn' onClick={() => {if (confirmDelete) {setConfirmDelete(false)} else { setConfirmDelete(true)}}}><AiFillDelete/></button>}
+									{ confirmDelete && <div>Na pewno?<button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)} >Tak</button><button onClick={() => setConfirmDelete(false)}type='button' className='btn'>Cofnij</button></div>}
+
 									{/* {!deleting && !error && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>} */}
-									{!deleting && <button type='button' className='btn' onClick={() => handleDelete(person, moviesDirected, moviesActed)}><AiFillDelete/></button>}
 									<Link to={`/persons/edit/${person.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>

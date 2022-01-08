@@ -3,35 +3,32 @@ import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import { connect } from 'react-redux';
-import { getMovieDetails } from "../../../ducks/Movies/selectors";
+import { getMovieDetails, getMoviesError, getMoviesLoading } from "../../../ducks/Movies/selectors";
+import { getPersons, getPersonDetails } from "../../../ducks/Persons/selectors";
 import { createMovie, editMovie } from '../../../ducks/Movies/operations';
 import './MoviesForm.scss'
 
 function withRouter(Component) {
-    function ComponentWithRouterProp(props) {
-      let params = useParams();
-      return (
-        <Component
-          {...props}
-          router={{ params }}
-        />
-      );
-    }
-  
-    return ComponentWithRouterProp;
-  }
+	function ComponentWithRouterProp(props) {
+		let params = useParams();
+		return (
+			<Component
+				{...props}
+				router={{ params }}
+			/>
+		);
+	}
+
+	return ComponentWithRouterProp;
+}
 
 
-function MoviesForm({createMovie, editMovie, movie, loading}) {
+function MoviesForm({ createMovie, editMovie, movie, loading, persons, director, pending, error }) {
 
-	const [pending, setPending] = useState(false);
-	const [error, setError] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
-
-
-	console.log(pending)
-	console.log(error)
+	const re = /https?:\/\/.*\.(?:png|jpg)/
+	const genres = [ 'horror', 'melodramat', 'sensacja', 'kryminalny', 'biograficzny', 'thriller', 'musical', 'przygodowy', 'historyczny', 'sci-fi', 'fantasy', 'western', 'dokumentalny', 'katastroficzny', 'komedia romantyczna', 'komedia']
 
 	const history = useNavigate();
 	function handleClick() {
@@ -44,9 +41,6 @@ function MoviesForm({createMovie, editMovie, movie, loading}) {
 		if (!values.title) {
 			errors.title = "Tytuł nie może być pusty"
 		}
-		if (!values.genre) {
-			errors.genre = "Gatunek nie może być pusty"
-		}
 		if (!values.release_date) {
 			errors.release_date = "Data jest wymagana"
 		} else if (Date.parse(values.release_date) > Date.now()) {
@@ -55,13 +49,13 @@ function MoviesForm({createMovie, editMovie, movie, loading}) {
 
 		if (!values.description) {
 			errors.description = "Opis nie może być pusty"
-		} 
+		}
 		if (!values.image_url) {
 			errors.image_url = "Link nie może być pusty"
 		}
 
-		else if (isNaN(Number(values.director_id)) || (values.director_id !== "" && isNaN(parseInt(values.director_id)))) {
-			errors.director_id = "Podano złe id"
+		else if (!re.exec(values.image_url)) {
+			errors.image_url = "Niepoprawny link"
 		}
 
 		return errors;
@@ -79,131 +73,153 @@ function MoviesForm({createMovie, editMovie, movie, loading}) {
 	}, [movie])
 
 
-	
+
 	const handleSubmitEdit = (values) => {
+		
 		if (values.director_id === "") {
 			values.director_id = null
 		}
 		else {
 			values.director_id = parseInt(values.director_id)
 		}
-	console.log(values)
-	editMovie(values, setPending, setError, history)
-		
+		editMovie(values)
+		if (!error && !loading) {
+			history(`/movies/${values.id}`)
+		}
 	}
 
 	const handleSubmitAdd = (values) => {
-		
+
 		if (values.director_id === "") {
 			values.director_id = null
 		}
 		else {
 			values.director_id = parseInt(values.director_id)
 		}
-		createMovie(values, setPending, setError, history)
+		createMovie(values)
+		if (!error && !loading) {
+			history('/movies/page/1')
 		}
+	}
 
-	
+	const personsToShow = persons.filter((person) => person.id !== director.id).map((person) => {
+		return (
+				<option key={person.id} value={JSON.stringify(person.id)}>{person.first_name} {person.last_name}</option>
+		)
+	})
+
+	const genresToShow = genres.map((genre) => {
+		return (
+			<option key={genre} value={genre}>{genre}</option>
+	)
+	})
+
 	return (
 		<div>
 			<Formik
-			enableReinitialize={true}
-			initialValues={
-				editing && movie ?
-					{
-						id: movie.id,
-						title: movie.title,
-						genre: movie.genre,
-						release_date: movie.release_date.slice(0, 10),
-						description: movie.description,
-						image_url: movie.image_url,
-						director_id: movie.director_id ? movie.director_id : ''
-					}
-					:
-					{
-						title: '',
-						genre: '',
-						release_date: '',
-						description: '',
-						image_url: '',
-						director_id: ''
-					}
-			}
-			validate={handleValidate}
-			onSubmit={editing ? handleSubmitEdit : handleSubmitAdd}>
-			{ (formProps) => (
-				<div className="row justify-content-md-center">
-					<div className='container-add col'>
-						{loading && <div>Ładowanie...</div>}
-						<div className='button-back'>
-							<button className='btn btn-primary' type='button' onClick={handleClick}><RiArrowGoBackLine /></button>
-						</div>
-						<div className='form'>
-							<form className='add-movie'>
-								{editing ? <h2>Edytuj film</h2> : <h2>Dodaj film</h2>}
-								<div className='mb-2'>
-									<label className='form-label'>Tytuł</label>
-									<Field type='text' className='form-control' name='title' value={formProps.values.title ? formProps.values.title : ''}>
-									</Field>
-									{formProps.touched.title && formProps.errors.title ? <div className="error">{formProps.errors.title}</div> : null}
-								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Gatunek</label>
-									<Field type='text' className='form-control' name='genre' value={formProps.values.genre ? formProps.values.genre : ''}>
-									</Field>
-									{formProps.touched.genre && formProps.errors.genre ? <div className="error">{formProps.errors.genre}</div> : null}
-								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Data premiery</label>
-									<Field type='date' className='form-control' name='release_date' value={formProps.values.release_date ? formProps.values.release_date : ''}>
-									</Field>
-									{formProps.touched.release_date && formProps.errors.release_date ? <div className="error">{formProps.errors.release_date}</div> : null}
-								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Opis</label>
-									<Field component='textarea' className='form-control' name='description' value={formProps.values.description ? formProps.values.description : ''}>
-									</Field>
-									{formProps.touched.description && formProps.errors.description ? <div className="error">{formProps.errors.description}</div> : null}
-								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Link do obrazka</label>
-									<Field type='text' className='form-control' name='image_url' value={formProps.values.image_url ? formProps.values.image_url : ''}>
-									</Field>
-									{formProps.touched.image_url && formProps.errors.image_url ? <div className="error">{formProps.errors.image_url}</div> : null}
-								</div>
-								<div className='mb-2'>
-									<label className='form-label'>Id reżysera (opcjonalnie)</label>
-									<Field type='text' className='form-control' name='director_id' value={formProps.values.director_id ? formProps.values.director_id : ''}>
-									</Field>
-									{formProps.touched.director_id && formProps.errors.director_id ? <div className="error">{formProps.errors.director_id}</div> : null}
-
-								</div>
-								<div>
-									{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
-									{editing && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
-									{adding && pending && !error && <button className='btn' disabled>Dodawanie filmu...</button>}
-									{editing && pending && !error && <button className='btn' disabled>Zmieniam  dane..</button>}
-									{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
-								</div>
-							</form>
+				enableReinitialize={true}
+				initialValues={
+					editing && movie ?
+						{
+							id: movie.id,
+							title: movie.title,
+							genre: movie.genre,
+							release_date: movie.release_date.slice(0, 10),
+							description: movie.description,
+							image_url: movie.image_url,
+							director_id: movie.director_id ? movie.director_id : ''
+						}
+						:
+						{
+							title: '',
+							genre: genres[0],
+							release_date: '',
+							description: '',
+							image_url: '',
+							director_id: ''
+						}
+				}
+				validate={handleValidate}
+				onSubmit={editing ? handleSubmitEdit : handleSubmitAdd}>
+				{(formProps) => (
+					<div className="row justify-content-md-center">
+						<div className='container-add col'>
+							{loading && <div>Ładowanie...</div>}
+							<div className='button-back'>
+								<button className='btn btn-primary' type='button' onClick={handleClick}><RiArrowGoBackLine /></button>
+							</div>
+							<div className='form'>
+								<form className='add-movie'>
+									{editing ? <h2>Edytuj film</h2> : <h2>Dodaj film</h2>}
+									<div className='mb-2'>
+										<label className='form-label'>Tytuł</label>
+										<Field type='text' className='form-control' name='title' value={formProps.values.title ? formProps.values.title : ''}>
+										</Field>
+										{formProps.touched.title && formProps.errors.title ? <div className="error">{formProps.errors.title}</div> : null}
+									</div>
+									<div className='mb-2'>
+										<label className='form-label'>Gatunek</label>
+										<Field as='select' name='genre' className="form-select" aria-label="size 4 select"value={formProps.values.genre ? formProps.values.genre : ''}>
+										{genresToShow}
+										</Field>
+									</div>
+									<div className='mb-2'>
+										<label className='form-label'>Data premiery</label>
+										<Field type='date' className='form-control' name='release_date' value={formProps.values.release_date ? formProps.values.release_date : ''}>
+										</Field>
+										{formProps.touched.release_date && formProps.errors.release_date ? <div className="error">{formProps.errors.release_date}</div> : null}
+									</div>
+									<div className='mb-2'>
+										<label className='form-label'>Opis</label>
+										<Field component='textarea' className='form-control' name='description' value={formProps.values.description ? formProps.values.description : ''}>
+										</Field>
+										{formProps.touched.description && formProps.errors.description ? <div className="error">{formProps.errors.description}</div> : null}
+									</div>
+									<div className='mb-2'>
+										<label className='form-label'>Link do obrazka</label>
+										<Field type='text' className='form-control' name='image_url' value={formProps.values.image_url ? formProps.values.image_url : ''}>
+										</Field>
+										{formProps.touched.image_url && formProps.errors.image_url ? <div className="error">{formProps.errors.image_url}</div> : null}
+									</div>
+									<div className='mb-2'>
+									<label className='form-label'>{movie ? 'reżyser' : 'reżyser (opcjonalnie)' }</label>
+										<Field as='select' name='director_id' className="form-select" aria-label="size 4 select">
+											{ movie && movie.director_id && director ? <option value>{ `${director.first_name} ${director.last_name}`}</option> : <option value>{''}</option> }
+											{personsToShow ? personsToShow : null }
+										</Field>
+									</div>
+									<div>
+										{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
+										{editing && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
+										{adding && pending && !error && <button className='btn' disabled>Dodawanie filmu...</button>}
+										{editing && pending && !error && <button className='btn' disabled>Zmieniam  dane..</button>}
+										{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</Formik>
+				)}
+			</Formik>
 
 		</div>
 	)
 }
 
-const mapStateToProps = (state,props) => {
+const mapStateToProps = (state, props) => {
+	const movie = getMovieDetails(state, props.router.params.id)
+	const director = movie ? getPersonDetails(state,movie.director_id) : {}
 	return {
-		movie: getMovieDetails(state,props.router.params.id)
+		movie: movie,
+		persons: getPersons(state),
+		director: director,
+		error: getMoviesError(state),
+		loading: getMoviesLoading(state)
 	}
 }
 
 const mapDispatchToProps = ({
-    createMovie,
+	createMovie,
 	editMovie
 });
 

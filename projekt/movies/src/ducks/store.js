@@ -3,8 +3,8 @@ import {createStore, applyMiddleware, combineReducers, compose} from 'redux';
 import { movieReducer } from './Movies/reducer';
 import { personReducer } from './Persons/reducer';
 import { actorReducer } from './Actors/reducer'
-import logger from 'redux-logger';
 import { createMiddleware } from 'redux-api-middleware';
+import logger from 'redux-logger';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

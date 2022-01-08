@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import { connect } from 'react-redux';
-import { getPersonDetails } from '../../../ducks/Persons/selectors';
+import { getPersonDetails, getPersonsError, getPersonsLoading } from '../../../ducks/Persons/selectors';
 import { createPerson, editPerson } from '../../../ducks/Persons/operations';
 import './PersonsForm.scss'
 
@@ -21,11 +21,9 @@ function withRouter(Component) {
     return ComponentWithRouterProp;
   }
 
-function PersonsForm({createPerson, editPerson, person, loading}) {
+function PersonsForm({createPerson, editPerson, person, loading, pending, error}) {
 
 
-	const [pending, setPending] = useState(false);
-	const [error, setError] = useState(false);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
 
@@ -69,13 +67,18 @@ function PersonsForm({createPerson, editPerson, person, loading}) {
 
 	
 	const handleSubmitEdit = (values) => {
-		editPerson(values, setPending, setError)
-		// history('/persons/page/1');
+		editPerson(values)
+		if (!error && !loading) {
+			history(`/persons/${values.id}`);
+		}
 	}
 
 	const handleSubmitAdd = (values) => {
-		createPerson(values, setPending, setError)
-		// history('/persons/page/1');
+		createPerson(values)
+		if (!error && !loading) {
+			history('/persons/page/1');
+		}
+		 
 		}
 
 	
@@ -156,7 +159,9 @@ function PersonsForm({createPerson, editPerson, person, loading}) {
 
 const mapStateToProps = (state, props) => {
 	return {
-		person: getPersonDetails(state,props.router.params.id)
+		person: getPersonDetails(state,props.router.params.id),
+		pending: getPersonsLoading(state),
+		error: getPersonsError(state)
 	}
 }
 const mapDispatchToProps = ({

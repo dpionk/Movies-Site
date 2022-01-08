@@ -1,15 +1,15 @@
-export const getPersons = (state) => state.persons;
+export const getPersons = (state) => state.persons.items;
 
 export const getPersonDetails = (state, id) => {
 	if (id !== null)
-	{return state.persons.find(person => person.id === parseInt(id))}
+	{return state.persons.items.find(person => person.id === parseInt(id))}
 	else {
 		return {}
 	}
 }
 
 export const getNationalities = (state) => {
-	return state.persons.reduce((prev,curr) => {
+	return state.persons.items.reduce((prev,curr) => {
 		let key = curr['nationality'].toLowerCase()
 		if (!prev.find((element) => element[0] === key)) {
 			prev = [...prev, [key, 1]]
@@ -26,3 +26,7 @@ export const getNationalities = (state) => {
 }, [] )
 
 }
+
+export const getPersonsLoading = (state) => state.persons.loading
+
+export const getPersonsError = (state) => state.persons.error

@@ -6,6 +6,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
 	const [checkboxClicked, setCheckboxClicked] = useState(false);
+	const [textValue, setTextValue]=useState();
 
 	const handleClick = () => {
 		if (dropdownClicked) {
@@ -20,6 +21,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 	const handleChange = (event) => {
 		setFilterGenre(null);
 		setFilterText(event.target.value);
+		setTextValue(event.target.value)
 
 	};
 
@@ -97,8 +99,8 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 					</div>}
 
 				</div>
-				<input type="text" className="form-control" placeholder={ whatToShow === 'movies' ? "Szukaj po tytule..." : "Szukaj po nazwisku..."} onChange={handleChange} />
-				<button className="btn" onClick={handleFilterReset} >Cofnij filtrowanie</button>
+				<input type="text" className="form-control" placeholder={ whatToShow === 'movies' ? "Szukaj po tytule..." : "Szukaj po nazwisku..."} onChange={handleChange} value={textValue} />
+				<button className="btn" onClick={() => {handleFilterReset(); setTextValue("")}} >Cofnij filtrowanie</button>
 			</ul>
 		</div>
 	);
@@ -106,7 +108,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 
 const mapStateToProps = (state) => {
 	return {
-	genreArray: state.movies.reduce((prev,curr) => {
+	genreArray: state.movies.items.reduce((prev,curr) => {
 		if (prev.find((elem) => {
 			return elem.toLowerCase() === curr.genre.toLowerCase()
 		})) {
@@ -118,7 +120,7 @@ const mapStateToProps = (state) => {
 		return prev;
 	},[]),
 	
-	nationalityArray: state.persons.reduce((prev,curr) => {
+	nationalityArray: state.persons.items.reduce((prev,curr) => {
 		if (prev.find((elem) => {
 			return elem.toLowerCase() === curr.nationality.toLowerCase()
 		})) {

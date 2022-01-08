@@ -25,3 +25,8 @@ export const movieEditDirectorAction = (movie, director_id) => ({
 	type: types.MOVIE_EDIT_DIRECTOR,
 	payload: {'movie': movie.id, 'director': director_id}
 })
+
+export const movieDeleteDirectorAction = (movie) => ({
+	type:types.MOVIE_DELETE_DIRECTOR,
+	payload: movie
+})
