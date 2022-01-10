@@ -30,7 +30,7 @@ export const getMovieList = () => {
 			{
 			  type: types.MOVIE_LIST_SUCCESS
 			},
-			{ type: types.MOVIE_LIST_FAILURE
+			{ type: types.MOVIE_LIST_FAILURE,
 			} 
 		]
 	})
@@ -71,7 +71,9 @@ export const createMovie = (newMovie) => {
 			{
 			  type: types.MOVIE_ADD_SUCCESS,
 			},
-			{ type: types.MOVIE_ADD_FAILURE
+			{ type: types.MOVIE_ADD_FAILURE,
+			payload: (action, state, res) => {
+					return res }
 			} 
 		],
 		body: JSON.stringify(newMovie)
@@ -79,6 +81,7 @@ export const createMovie = (newMovie) => {
 }
 
 export const deleteMovie = (movieToDelete, actors) => {
+	console.log(movieToDelete, actors)
 	return async dispatch => {
 			if (actors.length === 0) {
             axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`).then(() => {

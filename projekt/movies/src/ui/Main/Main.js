@@ -12,6 +12,13 @@ import { Chart }            from 'react-chartjs-2'
 
 function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 	
+	const colors = [
+		"#eb9dda",
+		"#ebd59d",
+		"#9debae",
+		"#9db3eb",
+		"#d1f3a5"
+	  ]
 
 	const [nationalityData, setNationalityData] = useState({
 		labels:  nationalities.map((nationality) => {
@@ -19,19 +26,22 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 		}),
 		datasets: [
 			{
-				label: 'Narodowości aktorów',
+				label: 'Narodowości osób',
 				data: nationalities.map((nationality) => {
 					return nationality[1]
 				}),
-				backgroundColor: [
-					"#ffbb11",
-					"#ecf0f1",
-					"#50AF95",
-					"#f3ba2f",
-					"#2a71d0"
-				  ]
+				backgroundColor: colors
 			}
-		]
+		],
+			scales: {
+				y: {
+					max: 5,
+					min: 0,
+					ticks: {
+						stepSize: 2
+					}
+				}
+			}
 	})
 
 	const [genreData, setGenreData] = useState({
@@ -44,15 +54,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 			   data: genres.map((genre) => {
 				   return genre[1]
 			   }),
-			   backgroundColor: [
-				   "#ffbb11",
-				   "#ecf0f1",
-				   "#50AF95",
-				   "#f3ba2f",
-				   "#2a71d0"
-				 ]
+			   backgroundColor: colors
 		   }
-	   ]
+	   ],
+	   scales: {
+		   yAxes: [{
+			   max: 5,
+			   min: 0,
+			   ticks: {
+				   stepSize: 2
+			   }
+		   }]
+	   }
 	})
 
  
@@ -94,15 +107,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 			}).map((person) => {
 				   return person.movies_played
 			   }),
-			   backgroundColor: [
-				   "#ffbb11",
-				   "#ecf0f1",
-				   "#50AF95",
-				   "#f3ba2f",
-				   "#2a71d0"
-				 ]
+			   backgroundColor: colors
 		   }
-	   ]
+	   ],
+	   scales: {
+		   y: {
+			   max: 5,
+			   min: 0,
+			   ticks: {
+				   stepSize: 2
+			   }
+		   }
+	   }
 	})
 
 
@@ -143,15 +159,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 			}).map((movie) => {
 				   return movie.actors
 			   }),
-			   backgroundColor: [
-				   "#ffbb11",
-				   "#ecf0f1",
-				   "#50AF95",
-				   "#f3ba2f",
-				   "#2a71d0"
-				 ]
+			   backgroundColor: colors
 		   }
-	   ]
+	   ],
+	   scales: {
+		   y: {
+			   max: 5,
+			   min: 0,
+			   ticks: {
+				   stepSize: 2
+			   }
+		   }
+	   }
 	})
 
 	useEffect(() => {
@@ -161,21 +180,22 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 		   }),
 			datasets: [
 				{
-					label: 'Narodowości aktorów',
+					label: 'Narodowości osób',
 					data: nationalities.map((nationality) => {
 						return nationality[1]
 					}),
-					backgroundColor: [
-						'rgba(255, 99, 132, 0.6)',
-              'rgba(54, 162, 235, 0.6)',
-              'rgba(255, 206, 86, 0.6)',
-              'rgba(75, 192, 192, 0.6)',
-              'rgba(153, 102, 255, 0.6)',
-              'rgba(255, 159, 64, 0.6)',
-              'rgba(255, 99, 132, 0.6)'
-					  ]
+					backgroundColor: colors
 				}
-			]
+			],
+			scales: {
+				y: {
+					max: 5,
+					min: 0,
+					ticks: {
+						stepSize: 2
+					}
+				}
+			}
 		})
 		setGenreData({
 			labels:  genres.map((genre) => {
@@ -187,15 +207,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 				   data: genres.map((genre) => {
 					   return genre[1]
 				   }),
-				   backgroundColor: [
-					   "#ffbb11",
-					   "#ecf0f1",
-					   "#50AF95",
-					   "#f3ba2f",
-					   "#2a71d0"
-					 ]
+				   backgroundColor: colors
 			   }
-		   ]
+		   ],
+		   scales: {
+			   y: {
+				   max: 5,
+				   min: 0,
+				   ticks: {
+					   stepSize: 2
+				   }
+			   }
+		   }
 		})
 		setActorsData({
 			labels:  persons.map((person) => {
@@ -235,15 +258,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 				}).map((person) => {
 					   return person.movies_played
 				   }),
-				   backgroundColor: [
-					   "#ffbb11",
-					   "#ecf0f1",
-					   "#50AF95",
-					   "#f3ba2f",
-					   "#2a71d0"
-					 ]
+				   backgroundColor: colors
 			   }
-		   ]
+		   ],
+		   scales: {
+			   y: {
+				   max: 5,
+				   min: 0,
+				   ticks: {
+					   stepSize: 2
+				   }
+			   }
+		   }
 		})
 		setMoviesData({
 			labels: movies.map((movie) => {
@@ -280,15 +306,18 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 				}).map((movie) => {
 					   return movie.actors
 				   }),
-				   backgroundColor: [
-					   "#ffbb11",
-					   "#ecf0f1",
-					   "#50AF95",
-					   "#f3ba2f",
-					   "#2a71d0"
-					 ]
+				   backgroundColor: colors
 			   }
-		   ]
+		   ],
+		   scales: {
+			   y: {
+				   max: 5,
+				   min: 0,
+				   ticks: {
+					   stepSize: 2
+				   }
+			   }
+		   }
 		})
 	},[nationalities, genres, actors, persons, actorsMovies, movies])
 
@@ -315,63 +344,22 @@ function Main({movies, nationalities, genres, actors, persons, actorsMovies}) {
 			<div className='list-group-item'>
 				<div className='charts'>
 					<div className='chart'>
-				<Bar data={nationalityData} className='chart-bar'
-				options={{
-            title:{
-              display:true,
-              fontSize:20
-            },
-            legend:{
-              display:true,
-              position:'right'
-            }
-          }}/>
+				<Bar data={nationalityData} className='chart-bar'/>
 		</div>
 		  <div className='chart'> 
-		  <Bar data={genreData}  className='chart-bar'
-				options={{
-            title:{
-              display:true,
-              fontSize:20
-            },
-            legend:{
-              display:true,
-              position:'right'
-            }
-          }}/>
+		  <Bar data={genreData}  className='chart-bar'/>
 		  </div>
 		  </div>
 			</div>
 			<div className='list-group-item'>
 			<div className='chart'> 
-		  <Bar data={actorsData}  className='chart-bar'
-				options={{
-            title:{
-              display:true,
-              fontSize:20
-            },
-            legend:{
-              display:true,
-              position:'right'
-            }
-          }}/>
+		  <Bar data={actorsData}  className='chart-bar'/>
 		  </div>
 		  <div className='chart'> 
-		  <Bar data={moviesData}  className='chart-bar'
-				options={{
-            title:{
-              display:true,
-              fontSize:20
-            },
-            legend:{
-              display:true,
-              position:'right'
-            }
-          }}/>
+		  <Bar data={moviesData}  className='chart-bar'/>
 		  </div>
 			</div>
 		</div>
-		
 		}
 		</div>
 	);

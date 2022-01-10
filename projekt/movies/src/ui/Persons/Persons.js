@@ -153,7 +153,7 @@ function Persons({persons, actors, loading, error}) {
 							</div>
 						</div>
 						<div className="list-group">
-							{personList}
+							{personList.length > 0 ? personList : "Brak osób"}
 						</div>
 					</div>
 					<div className="pagination-container">

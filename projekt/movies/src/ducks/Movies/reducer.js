@@ -1,12 +1,15 @@
 import types from "./types";
 
-export const movieReducer = (state = { items: [], loading:false, error:null} , action) => {
+export const movieReducer = (state = { items: [], loading:false, error: { 'database': null, 'duplicate_title': null}} , action) => {
     switch(action.type) {
         case types.MOVIE_LIST_REQUEST: 
             return {
 				...state,
 				loading:true,
-				error:null
+				error: {
+					'database': null,
+					'duplicate_title': null
+				}
 			};
 		case types.MOVIE_LIST_SUCCESS:
 			return {
@@ -18,14 +21,20 @@ export const movieReducer = (state = { items: [], loading:false, error:null} , a
 			return {
 				...state,
 				loading:false,
-				error: action.error,
+				error: {
+					'database': true,
+					'duplicate_title': null
+				},
 				items: []
 			};
 		case types.MOVIE_ADD_REQUEST:
 			return {
 				...state,
 				loading: true,
-				error:null
+				error: {
+					'database': null,
+					'duplicate_title': null
+				}
 			}
         case types.MOVIE_ADD_SUCCESS:
             return {
@@ -37,7 +46,13 @@ export const movieReducer = (state = { items: [], loading:false, error:null} , a
 			return {
 				...state,
 				loading:false,
-				error: action.error
+				error: action.payload.status ? {
+					'database': null,
+					'duplicate_title': true
+				} : {
+					'database': true,
+					'duplicate_title': null
+				}
 			}
 		case types.MOVIE_DELETE:
 			return {
@@ -100,7 +115,6 @@ export const movieReducer = (state = { items: [], loading:false, error:null} , a
 			loading:true
 		}
 		case types.MOVIE_DELETE_DIRECTOR_SUCCESS:
-			console.log('halohalo', action.payload)
 			return  {
 				...state, 
 				loading: false,

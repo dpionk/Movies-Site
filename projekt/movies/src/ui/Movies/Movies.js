@@ -136,9 +136,9 @@ function Movies({movies, actors, loading, error}) {
 	})
 
 	return (
-		<div>	{loading && !error && <div>Ładowanie...</div>}
+		<div>	{loading && <div>Ładowanie...</div>}
 			
-				{!loading && !error && movieList ? <div className="movies-container">
+				{!loading && movieList ? <div className="movies-container">
 					<div className="movies">
 						<div className="sort">
 							<div className="buttons">
@@ -151,7 +151,7 @@ function Movies({movies, actors, loading, error}) {
 							</div>
 						</div>
 						<div className="list-group">
-							{movieList}
+							{movieList.length > 0 ? movieList : "Brak filmów"}
 						</div>
 					</div>
 					<div className="pagination-container">
@@ -159,7 +159,7 @@ function Movies({movies, actors, loading, error}) {
 					</div>
 				</div> : null
 }
-	{ error && <div>Brak połączenia z bazą danych</div>}
+	{/*{<div>Brak połączenia z bazą danych</div>}*/}
 		</div>
 	)
 }

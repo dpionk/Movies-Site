@@ -23,8 +23,18 @@ function withRouter(Component) {
 }
 
 
-function MoviesForm({ createMovie, editMovie, movie, loading, persons, director, pending, error }) {
+function MoviesForm({ createMovie, editMovie, movie, persons, director, pending, error }) {
+	useEffect(() => {
+		//if (!pending) {
+		//	if (error.duplicate_title) alert('Zduplikowany tytuł');
 
+		//}
+		//if (!error.database && !error.duplicate_title && !pending) {
+		//	alert('Dodano film')
+		//	history('/movies/page/1')
+		//}
+
+	}, [pending, error, movie]);
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
 	const re = /https?:\/\/.*\.(?:png|jpg)/
@@ -34,7 +44,6 @@ function MoviesForm({ createMovie, editMovie, movie, loading, persons, director,
 	function handleClick() {
 		history(-1);
 	}
-
 	const handleValidate = (values) => {
 		const errors = {};
 
@@ -62,11 +71,11 @@ function MoviesForm({ createMovie, editMovie, movie, loading, persons, director,
 	}
 
 	useEffect(() => {
-		if (movie !== undefined) {
+		if (movie) {
 			setAdding(false);
 			setEditing(true);
 		}
-		else {
+		if (!movie) {
 			setEditing(false);
 			setAdding(true);
 		}
@@ -83,23 +92,26 @@ function MoviesForm({ createMovie, editMovie, movie, loading, persons, director,
 			values.director_id = parseInt(values.director_id)
 		}
 		editMovie(values)
-		if (!error && !loading) {
-			history(`/movies/${values.id}`)
-		}
+		//if (error.database && !pending) {
+		//	alert('Brak połączenia z bazą danych. Nie udało się dodać filmu.')
+		//}
+		//if (error.duplicate_title && !pending) { 
+		//	alert('Zduplikowany tytuł!')
+		//}
+		//if (!error.database && !error.duplicate_title && !pending) {
+		//	alert('Edycja przebiegła pomyślnie')
+		//	history(`/movies/${values.id}`)
+		//}
 	}
 
-	const handleSubmitAdd = (values) => {
 
-		if (values.director_id === "") {
-			values.director_id = null
-		}
-		else {
-			values.director_id = parseInt(values.director_id)
-		}
+	const handleSubmitAdd = (values) => {
+		values.director_id = values.director_id ? parseInt(values.director_id) : null
+
 		createMovie(values)
-		if (!error && !loading) {
-			history('/movies/page/1')
-		}
+
+
+
 	}
 
 	const personsToShow = persons.filter((person) => person.id !== director.id).map((person) => {
@@ -144,7 +156,7 @@ function MoviesForm({ createMovie, editMovie, movie, loading, persons, director,
 				{(formProps) => (
 					<div className="row justify-content-md-center">
 						<div className='container-add col'>
-							{loading && <div>Ładowanie...</div>}
+							{pending && <div>Ładowanie...</div>}
 							<div className='button-back'>
 								<button className='btn btn-primary' type='button' onClick={handleClick}><RiArrowGoBackLine /></button>
 							</div>
@@ -183,17 +195,17 @@ function MoviesForm({ createMovie, editMovie, movie, loading, persons, director,
 									</div>
 									<div className='mb-2'>
 									<label className='form-label'>{movie ? 'reżyser' : 'reżyser (opcjonalnie)' }</label>
-										<Field as='select' name='director_id' className="form-select" aria-label="size 4 select">
-											{ movie && movie.director_id && director ? <option value>{ `${director.first_name} ${director.last_name}`}</option> : <option value>{''}</option> }
+										<Field as='select' name='director_id' className="form-select" aria-label="size 4 select" value={formProps.values.director_id ? formProps.director_id : ''}>
+											{ movie && movie.director_id && director ? <option value>{ `${director.first_name} ${director.last_name}`}</option> : <option value></option> }
 											{personsToShow ? personsToShow : null }
 										</Field>
 									</div>
 									<div>
-										{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
-										{editing && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
-										{adding && pending && !error && <button className='btn' disabled>Dodawanie filmu...</button>}
-										{editing && pending && !error && <button className='btn' disabled>Zmieniam  dane..</button>}
-										{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
+										{adding && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
+										{editing && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
+										{/*{adding && pending && !error.database && !error.duplicate_title && <button className='btn' disabled>Dodawanie filmu...</button>}
+										{editing && pending && !error.database && !error.duplicate_title &&<button className='btn' disabled>Zmieniam  dane..</button>}
+										{error.database && <button className='btn' disabled>Brak połączenia z bazą danych</button>}*/}
 									</div>
 								</form>
 							</div>
@@ -214,7 +226,7 @@ const mapStateToProps = (state, props) => {
 		persons: getPersons(state),
 		director: director,
 		error: getMoviesError(state),
-		loading: getMoviesLoading(state)
+		pending: getMoviesLoading(state)
 	}
 }
 

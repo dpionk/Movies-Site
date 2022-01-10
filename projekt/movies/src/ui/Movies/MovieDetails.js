@@ -34,6 +34,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirect
 	const [addingActor, setAddingActor] = useState(false);
 	const [confirmDelete, setConfirmDelete] = useState(false)
 
+
 	function handleSubmitDirector(director_id) {
 		 editDirector(movie, director_id)
 		setEditDirector(false)
@@ -50,8 +51,12 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirect
 	 function handleDelete(movie) {
 		 deleteMovie(movie, actors)
 		 if (!loading && !error ) {
+			 alert('Usunięto film')
 		history('/movies/page/1')
-		 }
+		 }     
+		 else {
+			 alert('Coś poszło nie tak')
+		 }     
 	}
 
 	const handleValidate = (values) => { 
@@ -118,12 +123,12 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirect
 								</div>
 								<div className="buttons">
 									{!loading && !confirmDelete && <button type='button' className='btn' onClick={() => {if (confirmDelete) {setConfirmDelete(false)} else { setConfirmDelete(true)}}}><AiFillDelete/></button>}
-									{ confirmDelete && <div>Na pewno?<button type='button' className='btn' onClick={handleDelete} >Tak</button><button onClick={() => setConfirmDelete(false)}type='button' className='btn'>Cofnij</button></div>}
+									{ confirmDelete && <div>Na pewno?<button type='button' className='btn' onClick={() => {handleDelete(movie,actors)}} >Tak</button><button onClick={() => setConfirmDelete(false)}type='button' className='btn'>Cofnij</button></div>}
 									<Link to={`/movies/edit/${movie.id}`}>
 										<button type='submit' className='btn'><AiFillEdit/></button>
 									</Link>
 									{loading && !error && <button className='btn' disabled>Usuwanie...</button>}
-									{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
+									{/*{error && <button className='btn' disabled>Coś poszło nie tak....</button>}*/}
 								</div>
 							</div>
 						</div>
@@ -174,7 +179,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirect
 									<Field as='select' name='id' className="form-select" aria-label="size 4 select">
 											{personsToChooseFromActor ? personsToChooseFromActor : null }
 										</Field>
-									{formProps.touched.id && formProps.errors.id ? <div className="error">{formProps.errors.id}</div> : null}
+									{formProps.touched.id && formProps.errors.id ? <div>{formProps.errors.id}</div> : null}
 									<button type='button' onClick={() => {formProps.handleSubmit(formProps.values.id)}} className='btn' >Zatwierdź</button>
 									
 								</div>

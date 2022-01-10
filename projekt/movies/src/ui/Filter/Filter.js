@@ -6,7 +6,7 @@ function Filter({ whatToShow, genreArray, nationalityArray, setFilterText, setFi
 
 	const [dropdownClicked, setdropdownClicked] = useState(false);
 	const [checkboxClicked, setCheckboxClicked] = useState(false);
-	const [textValue, setTextValue]=useState();
+	const [textValue, setTextValue]=useState('');
 
 	const handleClick = () => {
 		if (dropdownClicked) {
