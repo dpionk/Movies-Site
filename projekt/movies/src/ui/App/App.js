@@ -3,7 +3,7 @@ import { getMovieList } from '../../ducks/Movies/operations';
 import { getPersonList } from '../../ducks/Persons/operations';
 import { getActorList } from '../../ducks/Actors/operations'
 import { connect } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Main from '../Main/Main';
 import Navbar from '../Navbar/Navbar';
 import Movies from '../Movies/Movies';
@@ -48,10 +48,10 @@ function App({getMovieList, getPersonList, getActorList}) {
   );
 }
 
-const mapDispatchToProps = {
-	getMovieList,
-	getPersonList,
-	getActorList
-}
+const mapDispatchToProps = dispatch => ({
+	getMovieList: getMovieList(dispatch),
+	getPersonList: getPersonList(dispatch),
+	getActorList: getActorList(dispatch)
+})
 
 export default connect(null, mapDispatchToProps)(App);

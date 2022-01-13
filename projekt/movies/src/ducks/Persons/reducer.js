@@ -39,17 +39,30 @@ export const personReducer = (state = { items: [], loading:false, error:null}, a
 				loading:false,
 				error: action.error
 			}
-		case types.PERSON_DELETE:
-			return {
-				...state,
-				items: state.items.filter(person => person.id !== action.payload.id)
-			}
-			case types.PERSON_EDIT_REQUEST:
+		case types.PERSON_DELETE_REQUEST:
 				return {
 					...state,
 					loading: true,
 					error:null
 				}
+		case types.PERSON_DELETE_SUCCESS:
+			return {
+				...state,
+				loading:false,
+				items: state.items.filter(person => person.id !== action.payload.id)
+			};
+		case types.PERSON_DELETE_FAILURE:
+				return {
+					...state,
+					loading:false,
+					error:action.error
+				}
+			case types.PERSON_EDIT_REQUEST:
+				return {
+					...state,
+					loading: true,
+					error:null
+				};
 		case types.PERSON_EDIT_SUCCESS:
 				return {
 					...state,
@@ -60,13 +73,13 @@ export const personReducer = (state = { items: [], loading:false, error:null}, a
 						}
 						return person
 					})
-				}
+				};
 		case types.PERSON_EDIT_FAILURE:
 				return {
 					...state,
 					loading:false,
 					error: action.error
-				}
+				};
         default:
             return state;
     }

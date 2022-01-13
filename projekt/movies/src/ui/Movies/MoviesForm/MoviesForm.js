@@ -23,18 +23,7 @@ function withRouter(Component) {
 }
 
 
-function MoviesForm({ createMovie, editMovie, movie, persons, director, pending, error }) {
-	useEffect(() => {
-		//if (!pending) {
-		//	if (error.duplicate_title) alert('Zduplikowany tytuł');
-
-		//}
-		//if (!error.database && !error.duplicate_title && !pending) {
-		//	alert('Dodano film')
-		//	history('/movies/page/1')
-		//}
-
-	}, [pending, error, movie]);
+function MoviesForm({ createMovie, editMovie, movie, persons, director, pending }) {
 	const [editing, setEditing] = useState(false);
 	const [adding, setAdding] = useState(false)
 	const re = /https?:\/\/.*\.(?:png|jpg)/
@@ -91,27 +80,13 @@ function MoviesForm({ createMovie, editMovie, movie, persons, director, pending,
 		else {
 			values.director_id = parseInt(values.director_id)
 		}
-		editMovie(values)
-		//if (error.database && !pending) {
-		//	alert('Brak połączenia z bazą danych. Nie udało się dodać filmu.')
-		//}
-		//if (error.duplicate_title && !pending) { 
-		//	alert('Zduplikowany tytuł!')
-		//}
-		//if (!error.database && !error.duplicate_title && !pending) {
-		//	alert('Edycja przebiegła pomyślnie')
-		//	history(`/movies/${values.id}`)
-		//}
+		editMovie(values,history)
 	}
 
 
 	const handleSubmitAdd = (values) => {
 		values.director_id = values.director_id ? parseInt(values.director_id) : null
-
-		createMovie(values)
-
-
-
+		createMovie(values,history)
 	}
 
 	const personsToShow = persons.filter((person) => person.id !== director.id).map((person) => {
@@ -203,9 +178,8 @@ function MoviesForm({ createMovie, editMovie, movie, persons, director, pending,
 									<div>
 										{adding && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
 										{editing && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
-										{/*{adding && pending && !error.database && !error.duplicate_title && <button className='btn' disabled>Dodawanie filmu...</button>}
-										{editing && pending && !error.database && !error.duplicate_title &&<button className='btn' disabled>Zmieniam  dane..</button>}
-										{error.database && <button className='btn' disabled>Brak połączenia z bazą danych</button>}*/}
+										{adding && pending && <button className='btn' disabled>Dodawanie filmu...</button>}
+										{editing && pending && <button className='btn' disabled>Zmieniam  dane..</button>}
 									</div>
 								</form>
 							</div>
@@ -230,9 +204,9 @@ const mapStateToProps = (state, props) => {
 	}
 }
 
-const mapDispatchToProps = ({
-	createMovie,
-	editMovie
+const mapDispatchToProps = dispatch => ({
+	createMovie: createMovie(dispatch),
+	editMovie: editMovie(dispatch)
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MoviesForm));

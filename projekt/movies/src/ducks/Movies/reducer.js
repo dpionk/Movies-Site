@@ -54,11 +54,27 @@ export const movieReducer = (state = { items: [], loading:false, error: { 'datab
 					'duplicate_title': null
 				}
 			}
-		case types.MOVIE_DELETE:
+		case types.MOVIE_DELETE_REQUEST:
 			return {
 				...state,
+				loading: true,
+				error: {
+					'database': null,
+					'duplicate_title': null
+				}
+			}
+		case types.MOVIE_DELETE_SUCCESS:
+			return {
+				...state,
+				loading:false,
 				items : state.items.filter(movie => movie.id !== action.payload.id)
 			}
+		case types.MOVIE_DELETE_FAILURE:
+				return {
+					...state,
+					loading:false,
+					error: true
+				}
 		case types.MOVIE_EDIT_REQUEST:
 				return {
 					...state,

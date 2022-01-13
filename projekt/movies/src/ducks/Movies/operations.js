@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as actions from './actions';
 import * as actorActions from '../Actors/actions'
-import { createAction } from "redux-api-middleware";
+import { createAction, RSAA } from "redux-api-middleware";
 import types from "./types";
 
 //export const getMovieList = (setLoading) => {
@@ -18,8 +18,9 @@ import types from "./types";
 //    }
 //}
 
-export const getMovieList = () => {
-	return createAction({
+export const getMovieList = dispatch => () => {
+	return dispatch(createAction ({
+		[RSAA] : {
 		endpoint: 'http://localhost:5000/api/movies',
 		method: 'GET',
 		headers: {
@@ -33,7 +34,9 @@ export const getMovieList = () => {
 			{ type: types.MOVIE_LIST_FAILURE,
 			} 
 		]
-	})
+	},onFailure: () => {alert('Nie udało się pobrać danych'); console.log('Nie udało się pobrać filmów')},
+	onSuccess: () => {console.log('pobrano listę filmów')}
+	}))
  }
 
 //export const createMovie = (newMovie, setPending, setError, history) => {
@@ -59,8 +62,10 @@ export const getMovieList = () => {
 //    }
 //}
 
-export const createMovie = (newMovie) => {
-	return createAction({
+export const createMovie = dispatch =>  (newMovie,history) => {
+	
+	return dispatch ( createAction ({
+		[RSAA] : {
 		endpoint: 'http://localhost:5000/api/movies',
 		method: 'POST',
 		headers: {
@@ -77,36 +82,59 @@ export const createMovie = (newMovie) => {
 			} 
 		],
 		body: JSON.stringify(newMovie)
-	})
+	},
+		onSuccess: () => {alert('Dodano'); history('/movies/page/1')},
+		onFailure: () => {alert('Nie udało się dodać filmu')}
+	}))
+
 }
 
-export const deleteMovie = (movieToDelete, actors) => {
-	console.log(movieToDelete, actors)
-	return async dispatch => {
+export const deleteMovie = dispatch => (movieToDelete, actors, history) => {
+	//return async dispatch => {
 			if (actors.length === 0) {
-            axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`).then(() => {
-				dispatch(actions.movieDeleteAction(movieToDelete));
-			}).catch((error) => {
-				console.log(error)
-			})
+				return dispatch (
+					createAction(
+						{
+							[RSAA]: {
+								endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
+								method: 'DELETE',
+								headers: {
+									 'Content-Type': 'application/json'
+									},
+								types: [
+										{ type: types.MOVIE_DELETE_REQUEST },
+										{
+				  							type: types.MOVIE_DELETE_SUCCESS,
+				  							payload: { 'id' : movieToDelete.id }
+										},
+										{ type: types.MOVIE_DELETE_FAILURE
+										} 
+								]
+							},
+							onSuccess: () => {alert('Usunięto'); history('/movies/page/1')},
+							onFailure: () => {alert('Nie udało się usunąć filmu')}
+						}
+						
+					)
+				)
 		}
-		else {
-			let promiseArray = actors.map((actor) => {
-				return axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}/actors/${actor.id}`)
-			})
-			promiseArray = [...promiseArray, axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`)]
+	//	else {
+	//		let promiseArray = actors.map((actor) => {
+	//			return axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}/actors/${actor.id}`)
+	//		})
+	//		promiseArray = [...promiseArray, axios.delete(`http://localhost:5000/api/movies/${movieToDelete.id}`)]
 
-			Promise.all(promiseArray).then(() => {
-				for (let i  in actors) {
-					dispatch(actorActions.actorDeleteAction(actors[i], movieToDelete));
-				}
-				dispatch(actions.movieDeleteAction(movieToDelete));
-				alert('Usunięto')
-			}).catch((error) => {
-				console.log(error)
-			})		
-		}
-    }
+	//		Promise.all(promiseArray).then(() => {
+	//			for (let i  in actors) {
+	//				dispatch(actorActions.actorDeleteAction(actors[i], movieToDelete));
+	//			}
+	//			dispatch(actions.movieDeleteAction(movieToDelete));
+	//			alert('Usunięto')
+	//		}).catch((error) => {
+	//			console.log(error)
+	//		})		
+	//	}
+    //}
 }
 
 //export const editMovie = (modifiedMovie, setPending, setError,history) => {
@@ -130,8 +158,9 @@ export const deleteMovie = (movieToDelete, actors) => {
 //    }
 //}
 
-export const editMovie = (modifiedMovie) => {
-	return createAction({
+export const editMovie = dispatch => (modifiedMovie, history) => {
+	return dispatch (  createAction ({
+		[RSAA] : {
 		endpoint: `http://localhost:5000/api/movies/${modifiedMovie.id}`,
 		method: 'PUT',
 		headers: {
@@ -146,8 +175,11 @@ export const editMovie = (modifiedMovie) => {
 			} 
 		],
 		body: JSON.stringify(modifiedMovie)
-	})
-}
+	},
+		onSuccess: () => {alert('Edycja przebiegła pomyślnie');history(`/movies/${modifiedMovie.id}`)},
+		onFailure: () => {alert('Nie udało się zedytować filmu')}
+	}))
+	}
 
 //export const editDirector = (movie, director_id) => {
 //	return async dispatch => {
@@ -163,9 +195,10 @@ export const editMovie = (modifiedMovie) => {
 //	}
 //}
 
-export const editDirector = (movie, director_id) => {
+export const editDirector = dispatch => (movie, director_id) => {
 
-	return createAction({
+	return dispatch (createAction({
+		[RSAA]: {
 		endpoint: `http://localhost:5000/api/movies/${movie.id}/director`,
 		method: 'PATCH',
 		headers: {
@@ -181,7 +214,10 @@ export const editDirector = (movie, director_id) => {
 			} 
 		],
 		body: JSON.stringify(director_id)
-	})
+	},
+		onSuccess: () => {alert('Zedytowano reżysera')},
+		onFailure: () => {alert('Nie udało się zedytować reżysera')}
+	}))
 }
 
 
@@ -199,8 +235,9 @@ export const editDirector = (movie, director_id) => {
 //	}
 //}
 
-export const deleteDirector = (movie) => {
-	return createAction({
+export const deleteDirector = dispatch => (movie) => {
+	return dispatch (createAction({
+		[RSAA] : {
 		endpoint: `http://localhost:5000/api/movies/${movie.id}/director`,
 		method: 'PATCH',
 		headers: {
@@ -216,5 +253,8 @@ export const deleteDirector = (movie) => {
 			} 
 		],
 		body: '{}'
-	})
+	},
+	onSuccess: () => {alert('Usunięto rezysera')},
+	onFailure: () => {alert('Nie udało się usunąć reżysera')}
+	}))
 }

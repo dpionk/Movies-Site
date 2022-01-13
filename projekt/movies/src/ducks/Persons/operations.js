@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as actions from './actions';
 import * as movieActions from '../Movies/actions'
 import * as actorActions from '../Actors/actions'
-import { createAction } from "redux-api-middleware";
+import { createAction, RSAA  } from "redux-api-middleware";
 import types from "./types";
 
 //export const getPersonList = (setLoading) => {
@@ -19,8 +19,9 @@ import types from "./types";
 //}
 
 
-export const getPersonList = () => {
-	return createAction({
+export const getPersonList = dispatch => () => {
+	return dispatch( createAction({
+		[RSAA] : {
 		endpoint: 'http://localhost:5000/api/persons',
 		method: 'GET',
 		headers: {
@@ -34,7 +35,9 @@ export const getPersonList = () => {
 			{ type: types.PERSON_LIST_FAILURE
 			} 
 		]
-	})
+	},onFailure: () => {console.log('Nie udało się pobrać osób')},
+	onSuccess: () => {console.log('pobrano listę osób')}
+	}))
  }
 //export const createPerson = (newPerson, setPending, setError) => {
 //	return async dispatch => {
@@ -51,8 +54,9 @@ export const getPersonList = () => {
 //    }
 //}
 
-export const createPerson = (newPerson) => {
-	return createAction({
+export const createPerson = dispatch => (newPerson, history) => {
+	return dispatch (createAction({
+		[RSAA]: {
 		endpoint: 'http://localhost:5000/api/persons',
 		method: 'POST',
 		headers: {
@@ -67,19 +71,46 @@ export const createPerson = (newPerson) => {
 			} 
 		],
 		body: JSON.stringify(newPerson)
-	})
+	},onFailure: () => {alert('Nie udało się dodać osoby')},
+	onSuccess: () => {alert('Dodano'); history('/persons/page/1')}
+
+	}))
 }
 
-export const deletePerson = (personToDelete, moviesWhereDirected, moviesWhereActed) => {
+export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, moviesWhereActed, history) => {
+
 	if (moviesWhereDirected.length === 0 && moviesWhereActed.length === 0) {
-	return async dispatch => {
-            axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`).then(() => {
-				dispatch(actions.personDeleteAction(personToDelete));
-				alert('Usunięto')
-			}).catch((error) => {
-				console.log(error)
-			})		
-    }
+	return dispatch ( createAction ({
+		[RSAA]: {
+			endpoint: `http://localhost:5000/api/persons/${personToDelete.id}`,
+			method: 'DELETE',
+			headers: {
+			 'Content-Type': 'application/json'
+			},
+			types: [
+				{ type: types.PERSON_DELETE_REQUEST },
+				{
+				  type: types.PERSON_DELETE_SUCCESS,
+				  payload: { 'id' : personToDelete.id }
+				},
+				{ type: types.PERSON_DELETE_FAILURE
+				} 
+			]
+		},onFailure: () => {alert('Nie udało się usunąć osoby')},
+		onSuccess: () => {alert('Usunięto'); history('/persons/page/1')}
+	}
+
+	))
+
+
+//	{
+//		axios.delete(`http://localhost:5000/api/persons/${personToDelete.id}`).then(() => {
+//			dispatch(actions.personDeleteAction(personToDelete));
+//			alert('Usunięto')
+//		}).catch((error) => {
+//			console.log(error)
+//		})		
+//}
 	}
 	else {
 		let promiseArray = moviesWhereDirected.map((movie) => {
@@ -122,8 +153,9 @@ export const deletePerson = (personToDelete, moviesWhereDirected, moviesWhereAct
 //	}
 //}
 
-export const editPerson = (modifiedPerson) => {
-	return createAction({
+export const editPerson = dispatch => (modifiedPerson, history) => {
+	return dispatch (createAction({
+		[RSAA]: {
 		endpoint: `http://localhost:5000/api/persons/${modifiedPerson.id}`,
 		method: 'PUT',
 		headers: {
@@ -138,5 +170,9 @@ export const editPerson = (modifiedPerson) => {
 			} 
 		],
 		body: JSON.stringify(modifiedPerson)
-	})
+	}
+	,onFailure: () => {alert('Nie udało się zedytować osoby')},
+	onSuccess: () => {alert('Edycja przebiegła pomyślnie'); history(`/persons/${modifiedPerson.id}`)}}
+
+	))
 }

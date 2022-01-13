@@ -49,14 +49,7 @@ function MovieDetails ({movie, deleteMovie, director, editDirector, deleteDirect
 	}
 
 	 function handleDelete(movie) {
-		 deleteMovie(movie, actors)
-		 if (!loading && !error ) {
-			 alert('Usunięto film')
-		history('/movies/page/1')
-		 }     
-		 else {
-			 alert('Coś poszło nie tak')
-		 }     
+		 deleteMovie(movie, actors, history)
 	}
 
 	const handleValidate = (values) => { 
@@ -213,13 +206,13 @@ const mapStateToProps = (state,props) => {
 	}
 }
 
-const mapDispatchToProps = {
-	deleteMovie,
-	editDirector,
-	deleteDirector,
-	deleteMovieActor,
-	createActor
-}
+const mapDispatchToProps = dispatch => ({
+	deleteMovie: deleteMovie(dispatch),
+	editDirector: editDirector(dispatch),
+	deleteDirector: deleteDirector(dispatch),
+	deleteMovieActor: deleteMovieActor(dispatch),
+	createActor: createActor(dispatch)
+})
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MovieDetails));
 

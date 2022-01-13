@@ -67,18 +67,11 @@ function PersonsForm({createPerson, editPerson, person, loading, pending, error}
 
 	
 	const handleSubmitEdit = (values) => {
-		editPerson(values)
-		if (!error && !loading) {
-			history(`/persons/${values.id}`);
-		}
+		editPerson(values,history)
 	}
 
 	const handleSubmitAdd = (values) => {
-		createPerson(values)
-		if (!error && !loading) {
-			history('/persons/page/1');
-		}
-		 
+		createPerson(values,history)
 		}
 
 	
@@ -140,11 +133,10 @@ function PersonsForm({createPerson, editPerson, person, loading, pending, error}
 									{formProps.touched.nationality && formProps.errors.nationality ? <div className="error">{formProps.errors.nationality}</div> : null}
 								</div>
 								<div>
-									{adding && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
-									{editing && !pending && !error && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
-									{adding && pending && !error && <button className='btn' disabled>Dodawanie...</button>}
-									{editing && pending && !error && <button className='btn' disabled>Zmieniam  dane..</button>}
-									{error && <button className='btn' disabled>Coś poszło nie tak....</button>}
+									{adding && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Dodaj</button>}
+									{editing && !pending && <button type='button' onClick={formProps.handleSubmit} className='btn' >Zatwierdź</button>}
+									{adding && pending && <button className='btn' disabled>Dodawanie...</button>}
+									{editing && pending &&  <button className='btn' disabled>Zmieniam  dane..</button>}
 								</div>
 							</form>
 						</div>
@@ -164,9 +156,9 @@ const mapStateToProps = (state, props) => {
 		error: getPersonsError(state)
 	}
 }
-const mapDispatchToProps = ({
-    createPerson,
-	editPerson
+const mapDispatchToProps = dispatch => ({
+    createPerson: createPerson(dispatch),
+	editPerson: editPerson(dispatch)
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonsForm));

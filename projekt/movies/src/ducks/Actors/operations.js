@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as actions from './actions';
-import { createAction } from "redux-api-middleware";
+import { createAction, RSAA } from "redux-api-middleware";
 import types from "./types";
 
 //export const getActorList = () => {
@@ -14,8 +14,9 @@ import types from "./types";
 //    }
 //}
 
-export const getActorList = () => {
-	return createAction({
+export const getActorList = dispatch => () => {
+	return dispatch( createAction({
+		[RSAA] : {
 		endpoint: 'http://localhost:5000/api/actors',
 		method: 'GET',
 		headers: {
@@ -29,7 +30,9 @@ export const getActorList = () => {
 			{ type: types.ACTOR_LIST_FAILURE
 			} 
 		]
-	})
+	},onFailure: () => {console.log('Nie udało się pobrać aktorów')},
+	onSuccess: () => {console.log('pobrano listę aktorów')}
+	}))
  }
 
 
@@ -78,8 +81,9 @@ export const getActorList = () => {
 //    }
 //}
 
-export const createActor = (movie,actor) => {
-	return createAction({
+export const createActor = dispatch => (movie,actor) => {
+	return dispatch (createAction({
+		[RSAA]: {
 		endpoint: `http://localhost:5000/api/movies/${movie.id}/actors`,
 		method: 'POST',
 		headers: {
@@ -94,7 +98,9 @@ export const createActor = (movie,actor) => {
 			} 
 		],
 		body: JSON.stringify({ "id" : actor.id})
-	})
+	},onFailure: () => {alert('Nie udało się dodać aktora')},
+	onSuccess: () => {alert('dodano aktora')}
+	}))
 }
 
 //export const deleteMovieActor = (movie,actor) => {
@@ -108,8 +114,9 @@ export const createActor = (movie,actor) => {
 //    }
 //}
 
-export const deleteMovieActor = (movie, actor) => {
-	return createAction({
+export const deleteMovieActor = dispatch => (movie, actor) => {
+	return dispatch ( createAction({
+		[RSAA]: {
 		endpoint: `http://localhost:5000/api/movies/${movie.id}/actors/${actor.id}`,
 		method: 'DELETE',
 		headers: {
@@ -124,5 +131,9 @@ export const deleteMovieActor = (movie, actor) => {
 			{ type: types.ACTOR_DELETE_FAILURE
 			} 
 		]
+	},onFailure: () => {alert('Nie udało się usunąć aktora')},
+	onSuccess: () => {alert('usunięto aktora')}
+
 	})
+	)
 }

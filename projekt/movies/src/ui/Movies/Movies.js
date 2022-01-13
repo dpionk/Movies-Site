@@ -159,7 +159,6 @@ function Movies({movies, actors, loading, error}) {
 					</div>
 				</div> : null
 }
-	{/*{<div>Brak połączenia z bazą danych</div>}*/}
 		</div>
 	)
 }

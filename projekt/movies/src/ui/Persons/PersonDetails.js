@@ -24,11 +24,7 @@ function withRouter(Component) {
 
 function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movies, loading}) {
 
-	function handleDelete(person, moviesDirected, moviesActed) {
-		 deletePerson(person, moviesDirected, moviesActed)
-		history('/persons/page/1')
-		
-	}
+
 
 
 	const history = useNavigate();
@@ -39,6 +35,11 @@ function PersonDetails ({person, deletePerson, moviesDirected, moviesActed, movi
 	const handleClick = () => {
 		history(-1)
 	}
+
+	function handleDelete(person, moviesDirected, moviesActed) {
+		deletePerson(person, moviesDirected, moviesActed, history)
+	   
+   }
 
 	return (
 		
@@ -117,9 +118,9 @@ const mapStateToProps = (state,props) => {
 	}
 }
 
-const mapDispatchToProps = {
-	deletePerson
-}
+const mapDispatchToProps = dispatch => ({
+	deletePerson: deletePerson(dispatch)
+})
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonDetails));
 
