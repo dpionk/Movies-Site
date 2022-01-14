@@ -8,9 +8,6 @@ export const getMoviesWhereActed = (state, actor_id) =>  { return state.actors.i
 
 export const getMoviesLoading = (state) => state.movies.loading
 
-export const getMoviesError = (state) => state.movies.error
-
-
 export const getGenres = (state) => {
 	return state.movies.items.reduce((prev,curr) => {
 		let key = curr['genre']

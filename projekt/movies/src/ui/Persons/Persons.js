@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPersonsError, getPersonsLoading, getPersons } from '../../ducks/Persons/selectors'
+import { getPersonsLoading, getPersons } from '../../ducks/Persons/selectors'
 import { getActors } from '../../ducks/Actors/selectors'
 import Person from './Person'
 import { AiFillFilter } from 'react-icons/ai';
@@ -11,7 +11,7 @@ import Sort from '../Sort/Sort';
 import Filter from '../Filter/Filter';
 import './Persons.scss';
 
-function Persons({persons, actors, loading, error}) {
+function Persons({ persons, actors, loading }) {
 	const [personFilterActor, setPersonFilterActor] = useState(null);
 	const [personFilterText, setPersonFilterText] = useState(null);
 	const [personFilterNationality, setPersonFilterNationality] = useState(null);
@@ -30,10 +30,10 @@ function Persons({persons, actors, loading, error}) {
 	const indexOfFirstPerson = Number(id - 1) * personsPerPage;
 	const currentPersons = shownPersons.slice(indexOfFirstPerson, indexOfLastPerson)
 
-	
+
 	useEffect(() => {
 		let personsToShow = persons.map((person) => {
-			for (let i=0;i<actors.length;i++) {
+			for (let i = 0; i < actors.length; i++) {
 				if (actors[i][0] === person.id) {
 					return {
 						...person,
@@ -52,13 +52,13 @@ function Persons({persons, actors, loading, error}) {
 			personsToShow = personsToShow.sort(personSort)
 		}
 		if (personFilterNationality) {
-			personsToShow = personsToShow.filter(x => {return x.nationality.toLowerCase() === personFilterNationality})
+			personsToShow = personsToShow.filter(x => { return x.nationality.toLowerCase() === personFilterNationality })
 		}
 		if (personFilterText) {
-			personsToShow = personsToShow.filter(x => {return x.last_name.toLowerCase().indexOf(personFilterText.toLowerCase()) > -1})
+			personsToShow = personsToShow.filter(x => { return x.last_name.toLowerCase().indexOf(personFilterText.toLowerCase()) > -1 })
 		}
 		if (personFilterActor) {
-			personsToShow = personsToShow.filter(x => {return actors.filter((actor) => actor[0] === x.id).length !== 0})
+			personsToShow = personsToShow.filter(x => { return actors.filter((actor) => actor[0] === x.id).length !== 0 })
 		}
 		setShownPersons(personsToShow);
 	}, [personSort, persons, personFilterNationality, personFilterText, actors, personFilterActor])
@@ -85,7 +85,7 @@ function Persons({persons, actors, loading, error}) {
 
 	const personsByActors = () => {
 
-		setPersonSort(() => (a,b) => {
+		setPersonSort(() => (a, b) => {
 			return (a.movies_played < b.movies_played ? 1 : -1)
 		})
 		setAlphabeticActive(false);
@@ -109,11 +109,11 @@ function Persons({persons, actors, loading, error}) {
 	}
 
 	const personList = currentPersons.map((person) => {
-		const personInList = <Person 
-		first_name={person.first_name}
-		last_name={person.last_name}
-		id={person.id}
-		key={person.id}/>
+		const personInList = <Person
+			first_name={person.first_name}
+			last_name={person.last_name}
+			id={person.id}
+			key={person.id} />
 		return personInList
 	})
 
@@ -138,18 +138,18 @@ function Persons({persons, actors, loading, error}) {
 
 	return (
 		<div>
-			{loading && !error && <div>Ładowanie...</div>}
-			{!loading && !error && personList ?
+			{loading && <div>Ładowanie...</div>}
+			{!loading && personList ?
 				<div className="persons-container">
 					<div className="persons">
 						<div className="sort">
 							<div className="buttons">
-							<button className="btn" onClick={handleSort}><BiSort/></button>
-							<button className="btn" onClick={handleFilter}><AiFillFilter/></button>
+								<button className="btn" onClick={handleSort}><BiSort /></button>
+								<button className="btn" onClick={handleFilter}><AiFillFilter /></button>
 							</div>
 							<div className="displaying">
-							{showSort ? <Sort whatToShow='persons' personsByActors={personsByActors} actorActive={actorActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={personsAlphabetic} byDate={personsByDate} defaultSort={personsDefault}/> : null}
-							{showFilter ? <Filter setPersonFilterActor={setPersonFilterActor} setFilterYear={() => {}} setFilterText={setPersonFilterText} setFilterGenre={setPersonFilterNationality} handleFilterReset={handleFilterReset}/> : null}
+								{showSort ? <Sort whatToShow='persons' personsByActors={personsByActors} actorActive={actorActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={personsAlphabetic} byDate={personsByDate} defaultSort={personsDefault} /> : null}
+								{showFilter ? <Filter setPersonFilterActor={setPersonFilterActor} setFilterYear={() => { }} setFilterText={setPersonFilterText} setFilterGenre={setPersonFilterNationality} handleFilterReset={handleFilterReset} /> : null}
 							</div>
 						</div>
 						<div className="list-group">
@@ -157,11 +157,10 @@ function Persons({persons, actors, loading, error}) {
 						</div>
 					</div>
 					<div className="pagination-container">
-					<Pagination whatToShow='persons' data={shownPersons} elementsPerPage={personsPerPage} />
+						<Pagination whatToShow='persons' data={shownPersons} elementsPerPage={personsPerPage} />
 					</div>
 				</div> : null
-}
-{ error && <div>Brak połączenia z bazą danych</div>}
+			}
 		</div>
 	)
 }
@@ -169,7 +168,7 @@ function Persons({persons, actors, loading, error}) {
 const mapStateToProps = (state) => {
 	return {
 		persons: getPersons(state),
-		actors: getActors(state).reduce((prev,curr) => {
+		actors: getActors(state).reduce((prev, curr) => {
 			let key = curr['person_id']
 			if (!prev.find((element) => element[0] === key)) {
 				prev = [...prev, [key, 1]]
@@ -182,12 +181,11 @@ const mapStateToProps = (state) => {
 					return element
 				})
 			}
-		return prev
-	}, [] ).sort((a, b) => {
-		return (a[1] < b[1]) ? 1 : -1
-	}),
-	loading: getPersonsLoading(state),
-	error: getPersonsError(state)
+			return prev
+		}, []).sort((a, b) => {
+			return (a[1] < b[1]) ? 1 : -1
+		}),
+		loading: getPersonsLoading(state)
 	};
 }
 

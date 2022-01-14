@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { getMoviesError, getMoviesLoading, getMovies } from '../../ducks/Movies/selectors'
+import { getMoviesLoading, getMovies } from '../../ducks/Movies/selectors'
 import { AiFillFilter } from 'react-icons/ai';
 import { BiSort } from 'react-icons/bi';
 import Movie from './Movie'
@@ -12,7 +12,7 @@ import Pagination from '../Pagination/Pagination'
 import './Movies.scss';
 import { getActors } from '../../ducks/Actors/selectors';
 
-function Movies({movies, actors, loading, error}) {
+function Movies({ movies, actors, loading }) {
 
 
 	const [movieFilterYear, setMovieFilterYear] = useState(null)
@@ -29,7 +29,7 @@ function Movies({movies, actors, loading, error}) {
 
 	useEffect(() => {
 		let moviesToShow = movies.map((movie) => {
-			for (let i=0;i<actors.length;i++) {
+			for (let i = 0; i < actors.length; i++) {
 				if (actors[i][0] === movie.id) {
 					return {
 						...movie,
@@ -46,16 +46,16 @@ function Movies({movies, actors, loading, error}) {
 			moviesToShow = moviesToShow.sort(movieSort)
 		}
 		if (movieFilterGenre) {
-			moviesToShow = moviesToShow.filter(x => {return x.genre.toLowerCase() === movieFilterGenre})
+			moviesToShow = moviesToShow.filter(x => { return x.genre.toLowerCase() === movieFilterGenre })
 		}
 		if (movieFilterText) {
-			moviesToShow = moviesToShow.filter(x => {return x.title.toLowerCase().indexOf(movieFilterText.toLowerCase()) > -1})
+			moviesToShow = moviesToShow.filter(x => { return x.title.toLowerCase().indexOf(movieFilterText.toLowerCase()) > -1 })
 		}
 		if (movieFilterYear) {
-			moviesToShow = moviesToShow.filter(x => {return new Date(x.release_date).getFullYear() === movieFilterYear})
+			moviesToShow = moviesToShow.filter(x => { return new Date(x.release_date).getFullYear() === movieFilterYear })
 		}
 		setShownMovies(moviesToShow);
-	}, [movieSort, movies,  movieFilterText, movieFilterGenre,actors, movieFilterYear])
+	}, [movieSort, movies, movieFilterText, movieFilterGenre, actors, movieFilterYear])
 
 	const { id = "1" } = useParams();
 	const moviesPerPage = 3;
@@ -90,7 +90,7 @@ function Movies({movies, actors, loading, error}) {
 	};
 
 	const moviesByActors = () => {
-		setMovieSort(() => (a,b) => {
+		setMovieSort(() => (a, b) => {
 			return (a.actors < b.actors ? 1 : -1)
 		})
 		setAlphabeticActive(false);
@@ -127,38 +127,38 @@ function Movies({movies, actors, loading, error}) {
 	}
 
 	const movieList = currentMovies.map((movie) => {
-		const movieInList = <Movie 
-		title={movie.title}
-		image_url={movie.image_url}
-		key={movie.id}
-		id={movie.id}/>
+		const movieInList = <Movie
+			title={movie.title}
+			image_url={movie.image_url}
+			key={movie.id}
+			id={movie.id} />
 		return movieInList
 	})
 
 	return (
 		<div>	{loading && <div>Ładowanie...</div>}
-			
-				{!loading && movieList ? <div className="movies-container">
-					<div className="movies">
-						<div className="sort">
-							<div className="buttons">
-							<button className="btn" onClick={handleSort}><BiSort/></button>
-							<button className="btn" onClick={handleFilter}><AiFillFilter/></button>
-							</div>
-							<div className="displaying">
-							{showSort ? <Sort whatToShow='movies' moviesByActors={moviesByActors} actorMovieActive={actorMovieActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={moviesAlphabetic} byDate={moviesByDate} defaultSort={moviesDefault}/> : null}
-							{showFilter ? <Filter whatToShow='movies' setPersonFilterActor={() => {}} setFilterYear={setMovieFilterYear} setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset}/> : null}
-							</div>
+
+			{!loading && movieList ? <div className="movies-container">
+				<div className="movies">
+					<div className="sort">
+						<div className="buttons">
+							<button className="btn" onClick={handleSort}><BiSort /></button>
+							<button className="btn" onClick={handleFilter}><AiFillFilter /></button>
 						</div>
-						<div className="list-group">
-							{movieList.length > 0 ? movieList : "Brak filmów"}
+						<div className="displaying">
+							{showSort ? <Sort whatToShow='movies' moviesByActors={moviesByActors} actorMovieActive={actorMovieActive} alphabeticActive={alphabeticActive} dateActive={dateActive} defaultActive={defaultActive} alphabetic={moviesAlphabetic} byDate={moviesByDate} defaultSort={moviesDefault} /> : null}
+							{showFilter ? <Filter whatToShow='movies' setPersonFilterActor={() => { }} setFilterYear={setMovieFilterYear} setFilterText={setMovieFilterText} setFilterGenre={setMovieFilterGenre} handleFilterReset={handleFilterReset} /> : null}
 						</div>
 					</div>
-					<div className="pagination-container">
+					<div className="list-group">
+						{movieList.length > 0 ? movieList : "Brak filmów"}
+					</div>
+				</div>
+				<div className="pagination-container">
 					<Pagination whatToShow='movies' data={shownMovies} elementsPerPage={moviesPerPage} />
-					</div>
-				</div> : null
-}
+				</div>
+			</div> : null
+			}
 		</div>
 	)
 }
@@ -166,7 +166,7 @@ function Movies({movies, actors, loading, error}) {
 const mapStateToProps = (state) => {
 	return {
 		movies: getMovies(state),
-		actors: getActors(state).reduce((prev,curr) => {
+		actors: getActors(state).reduce((prev, curr) => {
 			let key = curr['movie_id']
 			if (!prev.find((element) => element[0] === key)) {
 				prev = [...prev, [key, 1]]
@@ -179,14 +179,13 @@ const mapStateToProps = (state) => {
 					return element
 				})
 			}
-		return prev
-	}, [] ).sort((a, b) => {
-		return (a[1] < b[1]) ? 1 : -1
-	}),
-	loading: getMoviesLoading(state),
-	error: getMoviesError(state)
+			return prev
+		}, []).sort((a, b) => {
+			return (a[1] < b[1]) ? 1 : -1
+		}),
+		loading: getMoviesLoading(state)
 	};
 }
 
 
-export default connect(mapStateToProps,null)(Movies);
+export default connect(mapStateToProps, null)(Movies);

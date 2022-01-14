@@ -1,13 +1,25 @@
 import types from "./types";
 
+const requestBody = (state) => {
+	return {
+		...state,
+		loading: true,
+		error: null
+	}
+}
+
+const failureBody = (state) => {
+	return {
+		...state,
+		loading: false,
+		error: true
+	}
+}
+
 export const actorReducer = (state = { items: [], loading:false, error:null}, action) => {
     switch(action.type) {
         case types.ACTOR_LIST_REQUEST: 
-            return {
-				...state,
-				loading:true,
-				error:null
-			};
+			return requestBody(state);
 		case types.ACTOR_LIST_SUCCESS:
 			return {
 				...state,
@@ -18,15 +30,11 @@ export const actorReducer = (state = { items: [], loading:false, error:null}, ac
 			return {
 				...state,
 				loading:false,
-				error: action.error,
+				error: true,
 				items: []
 			};
 		case types.ACTOR_ADD_REQUEST: 
-		return {
-			...state,
-			loading: true,
-			error:null
-		};
+			return requestBody(state);
         case types.ACTOR_ADD_SUCCESS:
             return {
 				...state,
@@ -34,17 +42,9 @@ export const actorReducer = (state = { items: [], loading:false, error:null}, ac
 				items : [...state.items, action.payload]
 			};
 		case types.ACTOR_ADD_FAILURE:
-				return {
-					...state,
-					loading:false,
-					error: action.error
-				};
+			return failureBody(state);
 		case types.ACTOR_DELETE_REQUEST:
-			return {
-				...state,
-				loading:true,
-				error: null
-			}
+			return requestBody(state);
 		case types.ACTOR_DELETE_SUCCESS:
 			return {
 				...state,
@@ -52,16 +52,7 @@ export const actorReducer = (state = { items: [], loading:false, error:null}, ac
 				items: state.items.filter(actor => (actor.movie_id !== action.payload.movie.id) || (actor.movie_id === action.payload.movie.id && actor.person_id !== action.payload.actor.id))
 			}
 		case types.ACTOR_DELETE_FAILURE: 
-		return {
-			...state,
-			loading:false,
-			error: action.error
-		}
-		case types.ACTOR_DELETE:
-			return {
-				...state,
-				items: state.items.filter(actor => (actor.movie_id !== action.payload.movie.id) || (actor.movie_id === action.payload.movie.id && actor.person_id !== action.payload.actor.id))
-			}
+			return failureBody(state);
         default:
             return state;
     }

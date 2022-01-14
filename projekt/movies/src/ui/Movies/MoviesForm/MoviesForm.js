@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Formik, Field } from "formik";
 import { RiArrowGoBackLine } from 'react-icons/ri';
 import { connect } from 'react-redux';
-import { getMovieDetails, getMoviesError, getMoviesLoading } from "../../../ducks/Movies/selectors";
+import { getMovieDetails, getMoviesLoading } from "../../../ducks/Movies/selectors";
 import { getPersons, getPersonDetails } from "../../../ducks/Persons/selectors";
 import { createMovie, editMovie } from '../../../ducks/Movies/operations';
 import './MoviesForm.scss'
@@ -146,7 +146,7 @@ function MoviesForm({ createMovie, editMovie, movie, persons, director, pending 
 									</div>
 									<div className='mb-2'>
 										<label className='form-label'>Gatunek</label>
-										<Field as='select' name='genre' className="form-select" aria-label="size 4 select"value={formProps.values.genre ? formProps.values.genre : ''}>
+										<Field as='select' name='genre' className="form-select mb-3" aria-label="select" value={formProps.values.genre ? formProps.values.genre : ''}>
 										{genresToShow}
 										</Field>
 									</div>
@@ -170,7 +170,7 @@ function MoviesForm({ createMovie, editMovie, movie, persons, director, pending 
 									</div>
 									<div className='mb-2'>
 									<label className='form-label'>{movie ? 'reżyser' : 'reżyser (opcjonalnie)' }</label>
-										<Field as='select' name='director_id' className="form-select" aria-label="size 4 select" value={formProps.values.director_id ? formProps.director_id : ''}>
+										<Field as='select' name='director_id' className="form-select" aria-label="select" value={formProps.values.director_id ? formProps.director_id : ''}>
 											{ movie && movie.director_id && director ? <option value>{ `${director.first_name} ${director.last_name}`}</option> : <option value></option> }
 											{personsToShow ? personsToShow : null }
 										</Field>
@@ -199,7 +199,6 @@ const mapStateToProps = (state, props) => {
 		movie: movie,
 		persons: getPersons(state),
 		director: director,
-		error: getMoviesError(state),
 		pending: getMoviesLoading(state)
 	}
 }

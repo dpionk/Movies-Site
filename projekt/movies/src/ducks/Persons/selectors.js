@@ -29,4 +29,3 @@ export const getNationalities = (state) => {
 
 export const getPersonsLoading = (state) => state.persons.loading
 
-export const getPersonsError = (state) => state.persons.error
