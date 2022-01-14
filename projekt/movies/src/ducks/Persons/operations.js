@@ -79,13 +79,22 @@ export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, mo
 
 	else {
 
-		for (let i in moviesWhereActed) {
-			actorOperations.deleteMovieActor(dispatch)(moviesWhereActed[i], personToDelete, false)
-		}
-		for (let i in moviesWhereDirected) {
-			movieOperations.deleteDirector(dispatch)(moviesWhereDirected[i], false)
-		}
-		return dispatch(
+		const actionsMoviesWhereActed = moviesWhereActed.map((movie) => {
+			return actorOperations.deleteMovieActor(dispatch)(movie, personToDelete, false)
+		})
+
+		const actionsMoviesWhereDirected = moviesWhereDirected.map((movie) => {
+			return movieOperations.deleteDirector(dispatch)(movie, false)
+		})
+
+		const actionsArray = [...actionsMoviesWhereActed, actionsMoviesWhereDirected]
+		//for (let i in moviesWhereActed) {
+		//	actorOperations.deleteMovieActor(dispatch)(moviesWhereActed[i], personToDelete, false)
+		//}
+		//for (let i in moviesWhereDirected) {
+		//	movieOperations.deleteDirector(dispatch)(moviesWhereDirected[i], false)
+		//}
+		return Promise.all(actionsArray).then(dispatch(
 			createAction(
 				{
 					[RSAA]: {
@@ -109,6 +118,7 @@ export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, mo
 					onFailure: () => { alert('Nie udało się usunąć osoby') }
 				}
 			)
+		)
 		)
 	}
 }

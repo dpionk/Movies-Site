@@ -86,35 +86,43 @@ export const deleteMovie = dispatch => (movieToDelete, actors, history) => {
 	}
 
 	else {
-		for (let i in actors) {
-			actorOperations.deleteMovieActor(dispatch)(movieToDelete, actors[i], false)
-		}
-		return dispatch(
-			createAction(
-				{
-					[RSAA]: {
-						endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						types: [
-							{ type: types.MOVIE_DELETE_REQUEST },
-							{
-								type: types.MOVIE_DELETE_SUCCESS,
-								payload: { 'id': movieToDelete.id }
-							},
-							{
-								type: types.MOVIE_DELETE_FAILURE
-							}
-						]
-					},
-					onSuccess: () => { alert('Usunięto'); history('/movies/page/1') },
-					onFailure: () => { alert('Nie udało się usunąć filmu') }
-				}
 
+		const actionsArray = actors.map((actor) => {
+			return actorOperations.deleteMovieActor(dispatch)(movieToDelete, actor, false)
+		})
+		//for (let i in actors) {
+		//	actorOperations.deleteMovieActor(dispatch)(movieToDelete, actors[i], false)
+		//}
+
+		return Promise.all(actionsArray).then(() => {
+			return dispatch(
+				createAction(
+					{
+						[RSAA]: {
+							endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
+							method: 'DELETE',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							types: [
+								{ type: types.MOVIE_DELETE_REQUEST },
+								{
+									type: types.MOVIE_DELETE_SUCCESS,
+									payload: { 'id': movieToDelete.id }
+								},
+								{
+									type: types.MOVIE_DELETE_FAILURE
+								}
+							]
+						},
+						onSuccess: () => { alert('Usunięto'); history('/movies/page/1') },
+						onFailure: () => { alert('Nie udało się usunąć filmu') }
+					}
+
+				)
 			)
-		)
+		})
+
 	}
 }
 
