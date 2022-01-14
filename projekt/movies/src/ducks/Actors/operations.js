@@ -52,7 +52,7 @@ export const createActor = dispatch => (movie, actor) => {
 }
 
 
-export const deleteMovieActor = dispatch => (movie, actor) => {
+export const deleteMovieActor = dispatch => (movie, actor, displayAlert) => {
 	return dispatch(createAction({
 		[RSAA]: {
 			endpoint: `http://localhost:5000/api/movies/${movie.id}/actors/${actor.id}`,
@@ -70,8 +70,8 @@ export const deleteMovieActor = dispatch => (movie, actor) => {
 					type: types.ACTOR_DELETE_FAILURE
 				}
 			]
-		}, onFailure: () => { alert('Nie udało się usunąć aktora') },
-		onSuccess: () => { alert('usunięto aktora') }
+		}, onFailure: displayAlert ?  () => { alert('Nie udało się usunąć aktora') } : null,
+		onSuccess: displayAlert ? () => { alert('usunięto aktora') } : null 
 
 	})
 	)

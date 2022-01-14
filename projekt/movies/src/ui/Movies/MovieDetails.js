@@ -65,7 +65,7 @@ function MovieDetails({ movie, deleteMovie, director, editDirector, deleteDirect
 	}
 
 	const actorsToShow = actors.map((actor) => {
-		return <div key={actor.id}> <Link to={`/persons/${actor.id}`} style={{ textDecoration: 'none', color: 'gray' }}>{actor.first_name} {actor.last_name}</Link><button className='btn' onClick={() => deleteMovieActor(movie, actor)}><AiFillDelete /></button> </div>
+		return <div key={actor.id}> <Link to={`/persons/${actor.id}`} style={{ textDecoration: 'none', color: 'gray' }}>{actor.first_name} {actor.last_name}</Link><button className='btn' onClick={() => deleteMovieActor(movie, actor, true)}><AiFillDelete /></button> </div>
 	})
 
 
@@ -137,7 +137,7 @@ function MovieDetails({ movie, deleteMovie, director, editDirector, deleteDirect
 												} else { setEditDirector(true) }
 											}}><AiFillEdit /></button>
 										</div>
-										{director.hasOwnProperty('id') && !editingDirector && <div className='nav-item'><Link to={`/persons/${director.id}`} style={{ textDecoration: 'none', color: 'gray' }}>{director.first_name} {director.last_name}</Link><button className='btn' onClick={() => deleteDirector(movie)}><AiFillDelete /></button> </div>}
+										{director.hasOwnProperty('id') && !editingDirector && <div className='nav-item'><Link to={`/persons/${director.id}`} style={{ textDecoration: 'none', color: 'gray' }}>{director.first_name} {director.last_name}</Link><button className='btn' onClick={() => deleteDirector(movie, true)}><AiFillDelete /></button> </div>}
 										{!director.hasOwnProperty('id') && !editingDirector && <div>Nie wybrano reżysera</div>}
 										{editingDirector ? <div>
 											<Formik

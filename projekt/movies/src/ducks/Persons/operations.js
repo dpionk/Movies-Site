@@ -80,12 +80,10 @@ export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, mo
 	else {
 
 		for (let i in moviesWhereActed) {
-			console.log(moviesWhereActed[i], personToDelete)
-			actorOperations.deleteMovieActor(dispatch)(moviesWhereActed[i], personToDelete)
+			actorOperations.deleteMovieActor(dispatch)(moviesWhereActed[i], personToDelete, false)
 		}
 		for (let i in moviesWhereDirected) {
-			console.log(moviesWhereDirected[i])
-			movieOperations.deleteDirector(dispatch)(moviesWhereDirected[i])
+			movieOperations.deleteDirector(dispatch)(moviesWhereDirected[i], false)
 		}
 		return dispatch(
 			createAction(

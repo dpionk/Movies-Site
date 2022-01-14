@@ -87,7 +87,7 @@ export const deleteMovie = dispatch => (movieToDelete, actors, history) => {
 
 	else {
 		for (let i in actors) {
-			actorOperations.deleteMovieActor(dispatch)(movieToDelete, actors[i])
+			actorOperations.deleteMovieActor(dispatch)(movieToDelete, actors[i], false)
 		}
 		return dispatch(
 			createAction(
@@ -170,7 +170,7 @@ export const editDirector = dispatch => (movie, director_id) => {
 	}))
 }
 
-export const deleteDirector = dispatch => (movie) => {
+export const deleteDirector = dispatch => (movie, displayAlert) => {
 	return dispatch(createAction({
 		[RSAA]: {
 			endpoint: `http://localhost:5000/api/movies/${movie.id}/director`,
@@ -190,7 +190,7 @@ export const deleteDirector = dispatch => (movie) => {
 			],
 			body: '{}'
 		},
-		onSuccess: () => { alert('Usunięto rezysera') },
-		onFailure: () => { alert('Nie udało się usunąć reżysera') }
+		onSuccess: displayAlert ? () => { alert('Usunięto rezysera') } : null,
+		onFailure: displayAlert ? () => { alert('Nie udało się usunąć reżysera') } : null
 	}))
 }
