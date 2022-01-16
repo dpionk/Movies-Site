@@ -4,6 +4,7 @@ import * as actorOperations from '../Actors/operations'
 import { createAction, RSAA } from "redux-api-middleware";
 import types from "./types";
 
+
 export const getMovieList = dispatch => () => {
 	return dispatch(createAction({
 		[RSAA]: {
@@ -77,7 +78,7 @@ export const deleteMovie = dispatch => (movieToDelete, actors, history) => {
 							}
 						]
 					},
-					onSuccess: () => { alert('Usunięto'); history('/movies/page/1') },
+					onSuccess: () => { history('/movies/page/1'); alert('Usunięto')   },
 					onFailure: () => { alert('Nie udało się usunąć filmu') }
 				}
 
