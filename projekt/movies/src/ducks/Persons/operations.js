@@ -51,30 +51,34 @@ export const createPerson = dispatch => (newPerson, history) => {
 	}))
 }
 
+export const deletePersonFinal = (dispatch, personToDelete, history) => {
+	return dispatch(createAction({
+		[RSAA]: {
+			endpoint: `http://localhost:5000/api/persons/${personToDelete.id}`,
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			types: [
+				{ type: types.PERSON_DELETE_REQUEST },
+				{
+					type: types.PERSON_DELETE_SUCCESS,
+					payload: { 'id': personToDelete.id }
+				},
+				{
+					type: types.PERSON_DELETE_FAILURE
+				}
+			]
+		}, onFailure: () => { alert('Nie udało się usunąć osoby') },
+		onSuccess: () => { alert('Usunięto'); history('/persons/page/1') }
+	}
+	))
+}
+
 export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, moviesWhereActed, history) => {
 
 	if (moviesWhereDirected.length === 0 && moviesWhereActed.length === 0) {
-		return dispatch(createAction({
-			[RSAA]: {
-				endpoint: `http://localhost:5000/api/persons/${personToDelete.id}`,
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				types: [
-					{ type: types.PERSON_DELETE_REQUEST },
-					{
-						type: types.PERSON_DELETE_SUCCESS,
-						payload: { 'id': personToDelete.id }
-					},
-					{
-						type: types.PERSON_DELETE_FAILURE
-					}
-				]
-			}, onFailure: () => { alert('Nie udało się usunąć osoby') },
-			onSuccess: () => { alert('Usunięto'); history('/persons/page/1') }
-		}
-		))
+		deletePersonFinal(dispatch,personToDelete,history)
 	}
 
 	else {
@@ -88,38 +92,8 @@ export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, mo
 		})
 
 		const actionsArray = [...actionsMoviesWhereActed, actionsMoviesWhereDirected]
-		//for (let i in moviesWhereActed) {
-		//	actorOperations.deleteMovieActor(dispatch)(moviesWhereActed[i], personToDelete, false)
-		//}
-		//for (let i in moviesWhereDirected) {
-		//	movieOperations.deleteDirector(dispatch)(moviesWhereDirected[i], false)
-		//}
-		return Promise.all(actionsArray).then(dispatch(
-			createAction(
-				{
-					[RSAA]: {
-						endpoint: `http://localhost:5000/api/persons/${personToDelete.id}`,
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						types: [
-							{ type: types.PERSON_DELETE_REQUEST },
-							{
-								type: types.PERSON_DELETE_SUCCESS,
-								payload: { 'id': personToDelete.id }
-							},
-							{
-								type: types.PERSON_DELETE_FAILURE
-							}
-						]
-					},
-					onSuccess: () => { alert('Usunięto'); history('/persons/page/1') },
-					onFailure: () => { alert('Nie udało się usunąć osoby') }
-				}
-			)
-		)
-		)
+
+		return Promise.all(actionsArray).then(() => deletePersonFinal(dispatch, personToDelete, history))
 	}
 }
 
