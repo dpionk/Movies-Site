@@ -1,5 +1,3 @@
-import axios from 'axios';
-import * as actions from './actions';
 import { createAction, RSAA } from "redux-api-middleware";
 import types from "./types";
 
