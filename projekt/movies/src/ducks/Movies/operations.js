@@ -54,75 +54,48 @@ export const createMovie = dispatch => (newMovie, history) => {
 
 }
 
+export const deleteMovieFinal = (dispatch,movieToDelete,history) => {
+	return dispatch(
+		createAction(
+			{
+				[RSAA]: {
+					endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					types: [
+						{ type: types.MOVIE_DELETE_REQUEST },
+						{
+							type: types.MOVIE_DELETE_SUCCESS,
+							payload: { 'id': movieToDelete.id }
+						},
+						{
+							type: types.MOVIE_DELETE_FAILURE
+						}
+					]
+				},
+				onSuccess: () => { history('/movies/page/1'); alert('Usunięto')   },
+				onFailure: () => { alert('Nie udało się usunąć filmu') }
+			}
+
+		)
+	)
+}
+
 export const deleteMovie = dispatch => (movieToDelete, actors, history) => {
 	if (actors.length === 0) {
-		return dispatch(
-			createAction(
-				{
-					[RSAA]: {
-						endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						types: [
-							{ type: types.MOVIE_DELETE_REQUEST },
-							{
-								type: types.MOVIE_DELETE_SUCCESS,
-								payload: { 'id': movieToDelete.id }
-							},
-							{
-								type: types.MOVIE_DELETE_FAILURE
-							}
-						]
-					},
-					onSuccess: () => { history('/movies/page/1'); alert('Usunięto')   },
-					onFailure: () => { alert('Nie udało się usunąć filmu') }
-				}
-
-			)
-		)
+		return deleteMovieFinal(dispatch,movieToDelete,history)
 	}
-
-	else {
 
 		const actionsArray = actors.map((actor) => {
 			return actorOperations.deleteMovieActor(dispatch)(movieToDelete, actor, false)
 		})
-		//for (let i in actors) {
-		//	actorOperations.deleteMovieActor(dispatch)(movieToDelete, actors[i], false)
-		//}
 
 		return Promise.all(actionsArray).then(() => {
-			return dispatch(
-				createAction(
-					{
-						[RSAA]: {
-							endpoint: `http://localhost:5000/api/movies/${movieToDelete.id}`,
-							method: 'DELETE',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							types: [
-								{ type: types.MOVIE_DELETE_REQUEST },
-								{
-									type: types.MOVIE_DELETE_SUCCESS,
-									payload: { 'id': movieToDelete.id }
-								},
-								{
-									type: types.MOVIE_DELETE_FAILURE
-								}
-							]
-						},
-						onSuccess: () => { alert('Usunięto'); history('/movies/page/1') },
-						onFailure: () => { alert('Nie udało się usunąć filmu') }
-					}
-
-				)
-			)
+			return deleteMovieFinal(dispatch,movieToDelete,history)
 		})
 
-	}
 }
 
 

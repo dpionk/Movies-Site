@@ -76,10 +76,9 @@ export const deletePersonFinal = (dispatch, personToDelete, history) => {
 export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, moviesWhereActed, history) => {
 
 	if (moviesWhereDirected.length === 0 && moviesWhereActed.length === 0) {
-		deletePersonFinal(dispatch,personToDelete,history)
+		return deletePersonFinal(dispatch,personToDelete,history)
 	}
 
-	else {
 
 		const actionsMoviesWhereActed = moviesWhereActed.map((movie) => {
 			return actorOperations.deleteMovieActor(dispatch)(movie, personToDelete, false)
@@ -92,7 +91,7 @@ export const deletePerson = dispatch => (personToDelete, moviesWhereDirected, mo
 		const actionsArray = [...actionsMoviesWhereActed, actionsMoviesWhereDirected]
 
 		return Promise.all(actionsArray).then(() => deletePersonFinal(dispatch, personToDelete, history))
-	}
+
 }
 
 
